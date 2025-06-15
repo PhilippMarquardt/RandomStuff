@@ -216,9 +216,6 @@ package-lock.json.bak
 # Output of 'npm pack'
 *.tgz
 
-*.mjs
-
-
 # Yarn Integrity file
 .yarn-integrity
 
