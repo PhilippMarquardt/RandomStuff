@@ -212,7 +212,8 @@ package-lock.json.bak
 
 # Optional REPL history
 .node_repl_history
-
+*.png
+*.pdf
 # Output of 'npm pack'
 *.tgz
 
