@@ -1,0 +1,37 @@
+{
+  "summary": {
+    "total_comparisons": 1,
+    "matches": 1,
+    "mismatches": 0,
+    "errors": 0,
+    "not_found": 0,
+    "success_rate": 100.0
+  },
+  "results": [
+    {
+      "box_id": "custom-1750955742778-upu4gz0es",
+      "box_type": "custom",
+      "comparison_type": "position_not_guaranteed",
+      "status": "match",
+      "details": {
+        "doc1_page": 1,
+        "doc1_candidates": 1,
+        "doc2_page": 1,
+        "doc2_candidates": 1,
+        "description1": "**Extracted Fondsdaten:**\n\n- **NAV pro Anteil (30.05.2025):** CHF 96.48\n- **52-Wochen-Hoch (02.12.2024):** CHF 97.35\n- **52-Wochen-Tief (12.06.2024):** CHF 91.46\n- **Fondsdomizil:** Schweiz\n- **Referenzwährung Anteilsklasse:** CHF\n- **Fondswährung:** CHF\n- **Abschluss Rechnungsjahr:** 31.10.\n- **Valoren Nummer:** 32517285\n- **ISIN-Nummer:** CH0325172853\n- **Bloomberg:** ZKBOAAS SW\n- **Lancierungsdatum Anteilsklasse:** 13.12.2016\n- **Lancierungsdatum Fonds:** 31.12.2003\n- **Start Performancemessung:** 01.01.2017\n- **Klassenvermögen (Mio.):** CHF 13.05\n- **Fondsvermögen (Mio.):** CHF 3'707.81\n- **Ausstehende Anteile:** 135'683.008\n- **Letzte Ausschüttung (19.02.2025):** CHF 0.35\n- **Benchmark:** SBI® AAA-BBB TR\n- **Pauschale Verwaltungskomm. p.a.:** 0.85%\n- **Total Expense Ratio p.a.:** 0.85%\n- **Swinging Single Pricing:** Ja\n- **Verwaltungsgesellschaft:** Swisscanto Fondsleitung AG, Zürich\n- **Portfolio Management:** Zürcher Kantonalbank\n- **Depotbank:** Zürcher Kantonalbank",
+        "description2": "Here is the extracted information from the document page:\n\n### Fondsdaten\n\n- **NAV pro Anteil (30.05.2025):** CHF 2'794.40\n- **52-Wochen-Hoch (18.02.2025):** CHF 2'956.84\n- **52-Wochen-Tief (07.04.2025):** CHF 2'503.22\n- **Fondsdomizil:** Schweiz\n- **Referenzwährung Anteilsklasse:** CHF\n- **Fondswährung:** CHF\n- **Abschluss Rechnungsjahr:** 30.09.\n- **Valoren Nummer:** 277951\n- **ISIN-Nummer:** CH0002779517\n- **Bloomberg:** ZKBKAPI SW\n- **Lancierungsdatum Anteilsklasse:** 16.05.1990\n- **Lancierungsdatum Fonds:** 16.05.1990\n- **Start Performancemessung:** 01.06.1990\n- **Klassenvermögen (Mio.):** CHF 239.33\n- **Fondsvermögen (Mio.):** CHF 261.98\n- **Ausstehende Anteile:** 85'738.978\n- **Letzte Ausschüttung (22.01.2025):** CHF 15.60\n- **Pauschale Verwaltungskomm. p.a.:** 1.65%\n- **Total Expense Ratio p.a.:** 1.68%\n- **Swinging Single Pricing:** Ja\n- **Verwaltungsgesellschaft:** Swisscanto Fondsleitung AG, Zürich\n- **Portfolio Management:** Zürcher Kantonalbank\n- **Depotbank:** Zürcher Kantonalbank",
+        "search_method": "vision",
+        "extraction_model": "gpt-4o-mini",
+        "comparison_model": "gpt-4o-mini"
+      },
+      "llm_response": "Here is a detailed comparison based on the extracted information from Document 1 and Document 2:\n\n### General Information:\n- **Fondsdomizil and Currencies:**\n  - Both funds are domiciled in Switzerland and utilize the Swiss Franc (CHF) as the reference currency and fund currency.\n\n- **Valuation Dates and Numbers:**\n  - Document 1 has a Valoren Nummer of 32517285 and ISIN CH0325172853.\n  - Document 2 has a Valoren Nummer of 277951 and ISIN CH0002779517.\n\n- **Launch and Performance Dates:**\n  - Document 1's share class was launched on 13.12.2016, with performance tracking starting from 01.01.2017.\n  - Document 2's share class and fund were both launched on 16.05.1990, with performance tracking starting from 01.06.1990.\n\n### Financial Metrics:\n- **Net Asset Value (NAV) as of 30.05.2025:**\n  - Document 1: CHF 96.48\n  - Document 2: CHF 2'794.40\n\n- **52-Week Highs:**\n  - Document 1: CHF 97.35 (02.12.2024)\n  - Document 2: CHF 2'956.84 (18.02.2025)\n\n- **52-Week Lows:**\n  - Document 1: CHF 91.46 (12.06.2024)\n  - Document 2: CHF 2'503.22 (07.04.2025)\n\n- **Closings of the Accounting Year:**\n  - Document 1: 31.10.\n  - Document 2: 30.09.\n\n### Fund Size and Shares:\n- **Class Assets (Klassenvermögen):**\n  - Document 1: CHF 13.05 million\n  - Document 2: CHF 239.33 million\n\n- **Fund Assets (Fondsvermögen):**\n  - Document 1: CHF 3'707.81 million\n  - Document 2: CHF 261.98 million\n\n- **Outstanding Shares (Ausstehende Anteile):**\n  - Document 1: 135'683.008\n  - Document 2: 85'738.978\n\n### Distributions:\n- **Most Recent Distribution:**\n  - Document 1: CHF 0.35 on 19.02.2025\n  - Document 2: CHF 15.60 on 22.01.2025\n\n### Costs and Fees:\n- **Management Fees and Total Expense Ratio:**\n  - Document 1 has a management fee and Total Expense Ratio of 0.85%.\n  - Document 2 has a management fee of 1.65% and a Total Expense Ratio of 1.68%.\n\n### Other Features:\n- **Swinging Single Pricing:**\n  - Both documents indicate this pricing method is employed.\n\n- **Management and Banking:**\n  - Both funds are managed by Swisscanto Fondsleitung AG, Zürich.\n  - Both funds utilize Zürcher Kantonalbank for portfolio management and depot banking services.\n\n### Summary\n- Document 1 represents a relatively newer fund compared to Document 2, with smaller asset size but a significantly larger total fund asset base.\n- Document 2 holds a much higher NAV, with larger per-share distribution amounts but incurs higher fees.\n- Both funds are managed by the same portfolio management firm and have similar operational structures.",
+      "error_message": null
+    }
+  ],
+  "metadata": {
+    "workflow": "C:\\Users\\pmarq\\Downloads\\workflow-FSD_CH0325172853_SWC_CH_de.pdf (16).json",
+    "document1": "C:\\Users\\pmarq\\Downloads\\FSD_CH0325172853_SWC_CH_de.pdf",
+    "document2": "C:\\Users\\pmarq\\Downloads\\FSD_CH0002779517_SWC_CH_de (1).pdf",
+    "timestamp": "2025-06-26T20:36:49.571864"
+  }
+}
