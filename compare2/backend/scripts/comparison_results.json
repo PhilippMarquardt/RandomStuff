@@ -1,0 +1,68 @@
+{
+  "summary": {
+    "total_comparisons": 3,
+    "matches": 2,
+    "mismatches": 0,
+    "errors": 0,
+    "not_found": 1,
+    "success_rate": 66.66666666666666
+  },
+  "results": [
+    {
+      "box_id": "custom-1751271151593-v791a2bvi",
+      "box_type": "custom",
+      "comparison_type": "position_not_guaranteed_single_call",
+      "status": "match",
+      "details": {
+        "doc1_page": 3,
+        "doc2_page": 3,
+        "comparison_model": "gpt-4o-mini",
+        "doc1_headline": "**Breakdowns**",
+        "doc2_headline": "**Breakdowns**",
+        "search_method": "headline_match",
+        "search_text": "**Breakdowns**"
+      },
+      "llm_response": "To compare the specific element \"**Die größten Schuldner in %**\" between Document 1 and Document 2:\n\n### Document 1 - Page 3\n- **Pfandbriefbank schweizerischer Hypothekarinstitute AG**: 19.35\n- **Pfandbriefzentrale der schweizerischen Kantonalbanken AG**: 16.56\n- **Schweizerische Eidgenossenschaft**: 4.53\n- **Zürcher Kantonalbank**: 2.60\n- **Basellandschaftliche Kantonalbank**: 2.29\n- **Stadt Zürich - Schweiz**: 2.09\n- **UBS Group AG**: 1.60\n- **Graubündner Kantonalbank**: 1.59\n- **Kanton Genf - Schweiz**: 1.32\n- **Bank of Nova Scotia**: 1.13\n\n### Document 2 - Page 3\n- **Vereinigte Staaten von Amerika**: 0.28\n- **Pfandbriefbank schweizerischer Hypothekarinstitute AG**: 0.18\n- **Pfandbriefzentrale der schweizerischen Kantonalbanken AG**: 0.16\n- **Republik von Südafrika**: 0.14\n- **Republik Indonesien**: 0.13\n- **Föderative Republik Brasilien**: 0.10\n- **Bundesrepublik Deutschland**: 0.10\n- **Föderation von Malaysia**: 0.10\n- **Volksrepublik China**: 0.09\n\n### Key Differences\n- Document 1 focuses on Swiss institutions and some banks, whereas Document 2 includes international entities and sovereign states.\n- Percentages in Document 1 are significantly higher, reflecting a possibly different financial scope or type of debt measurement compared to Document 2.",
+      "error_message": null
+    },
+    {
+      "box_id": "custom-1751271406957-crel0l80a",
+      "box_type": "custom",
+      "comparison_type": "vision_model",
+      "status": "match",
+      "details": {
+        "text1": "**Indexierte Wertentwicklung und Wertentwicklung in %** **1**\n\n~~ᵃ~~ ~~ᵃ~~",
+        "text2": "**Indexierte Wertentwicklung und Wertentwicklung in %** **1**\n\n~~ᵃ~~ ~~ᵃ~~",
+        "page": 2,
+        "model": "gpt-4o-mini",
+        "guide_with_text": true
+      },
+      "llm_response": "The charts illustrate the indexed performance and percentage change over time for two datasets, both labeled \"Netto\" and \"Indexiert Netto.\" Here's a brief analysis of the movements:\n\n### Document 1 Chart:\n- **Time Span**: 2017 to Year-to-Date (YTD).\n- **Indexiert Netto Trend**: \n  - Initially fluctuates around the 98-104 range.\n  - Sharp decline around 2021, reaching its lowest point below 86.\n  - Recovery trend starting in 2022 through 2023, moving back towards 98.\n- **Netto Performance**: \n  - Bars indicate periods of positive and negative net returns.\n  - High bars appear around 2023.\n\n### Document 2 Chart:\n- **Time Span**: 2015 to YTD.\n- **Indexiert Netto Trend**: \n  - Initial growth phase from 2015, surpassing 118 by 2019.\n  - Peaks and then declines around 2021.\n  - Significant growth post-2021 to a peak above 142.\n  - Small decline towards the end, stabilizing around 136.\n- **Netto Performance**: \n  - Mixed positive and negative bars over the years.\n  - High positive bars around 2023.\n\n### Overall Observations:\n- **Document 1** shows a scenario of sharp decline followed by recovery.\n- **Document 2** illustrates a longer period with overall upward trajectory, despite some fluctuations.\n- **Netto Performance**: Bars in both charts show varying annual performance reflecting periods of growth and loss. \n\nBoth charts demonstrate different ranges and volatility, highlighting diverse performance trajectories.",
+      "error_message": null
+    },
+    {
+      "box_id": "custom-1751272245341-hf35ffv3w",
+      "box_type": "custom",
+      "comparison_type": "position_not_guaranteed",
+      "status": "not_found",
+      "details": {
+        "doc1_found": false,
+        "doc1_page": null,
+        "doc2_found": true,
+        "doc2_page": 1,
+        "search_method": "headline_match",
+        "search_text": "~~**Swisscanto (CH) Portfolio Fund**~~ ~~**Responsible Focus**~~ ~~**AA CHF**~~"
+      },
+      "llm_response": null,
+      "error_message": "Element not found in Document 1."
+    }
+  ],
+  "metadata": {
+    "workflow": "C:\\Users\\pmarq\\source\\repos\\CoreAI\\backend\\app\\data\\workflow-FSD_CH0002779517_SWC_CH_de1.json",
+    "document1": "C:\\Users\\pmarq\\Downloads\\FSD_CH0325172853_SWC_CH_de.pdf",
+    "document2": "C:\\Users\\pmarq\\Downloads\\FSD_CH0002779517_SWC_CH_de (1).pdf",
+    "timestamp": "2025-06-30T10:40:00.491553",
+    "parallel_processing": true,
+    "parallel_workers": 3
+  }
+}
