@@ -1,0 +1,102 @@
+/*
+ * ===================================================================
+ * Styles for the SDG Revenue Exposure AG Grid
+ * ===================================================================
+ */
+
+/* Scoped to the component container to prevent conflicts */
+#sdg-revenue-grid-container .page-title {
+  margin: 16px 0 8px 16px;
+  color: #003366;
+  font-weight: bold;
+}
+
+/* Scoped to the component container to prevent conflicts */
+#sdg-revenue-grid-container .grid-legend-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 16px 0 0 16px;
+}
+
+/* Scoped to the component container to prevent conflicts */
+#sdg-revenue-grid-container .grid-legend-wrapper > .custom-grid {
+  width: 100%;
+}
+
+/* Scoped to the component container to prevent conflicts */
+#sdg-revenue-grid-container .grid-legend-wrapper > :nth-child(2) {
+  margin-top: 12px;
+}
+
+/*
+ * ===================================================================
+ * AG Grid Specific Styles, scoped with .custom-grid
+ * ===================================================================
+ */
+
+/* Remove all borders from the root wrapper, header, and main container */
+.custom-grid,
+.custom-grid .ag-root-wrapper,
+.custom-grid .ag-header {
+  border: none !important;
+}
+
+/* Light-blue header background across all groups */
+.custom-grid .ag-header {
+  background-color: #e6f2ff;
+}
+
+/* Center header text and lighten font */
+.custom-grid .ag-header-cell-label {
+  justify-content: center;
+  font-weight: 600;
+  color: #003366;
+}
+
+/* Remove all column separation lines and cell borders */
+.custom-grid .ag-header-cell,
+.custom-grid .ag-cell {
+  border-right: none !important;
+  border-left: none !important;
+}
+
+/* No padding in cells so icons & charts fill their area */
+.custom-grid .ag-cell,
+.custom-grid .ag-cell-wrapper {
+  padding: 0 !important;
+}
+
+/* Center the % columns */
+.custom-grid .ag-cell[col-id="leftText"],
+.custom-grid .ag-cell[col-id="rightText"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure SVG icons are centered */
+.custom-grid .ag-cell[col-id="svg"] span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Set row separation lines to dark blue */
+.custom-grid .ag-row,
+.custom-grid .ag-pinned-bottom .ag-row {
+  border-bottom: 1px solid #003366; /* Dark Blue */
+  border-top: none;
+}
+
+/* Remove the last row's bottom border for a cleaner look */
+.custom-grid .ag-body-viewport .ag-row:last-child,
+.custom-grid .ag-pinned-bottom .ag-row:last-child {
+    border-bottom: none !important;
+}
+
+/* Hide AG Grid focus outline, scoped to this specific grid */
+.custom-grid .ag-cell:focus {
+  outline: none;
+}
