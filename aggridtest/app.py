@@ -116,9 +116,9 @@ def create_sdg_grid(df, title="SDG Revenue Exposure (%)"):
 
     revenue_header_template = """
     <div class="ag-cell-label-container" role="presentation" style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-        <span style="flex: 1; text-align: left;">Negative</span>
+        <span style="flex: 1; text-align: left;">Positive</span>
         <span style="flex: 1; text-align: center; font-weight: bold;">Revenue Based</span>
-        <span style="flex: 1; text-align: right;">Positive</span>
+        <span style="flex: 1; text-align: right;">Negative</span>
     </div>
     """
     columnDefs = [
@@ -176,7 +176,7 @@ if __name__ == '__main__':
         "bm_left": [10.1, 9.7, 11.0, 8.5, 7.9],
         "pf_neg1": [10, 12, 8, 9, 7], "pf_neg2": [5, 3, 4, 2, 6],
         "pf_pos1": [20, 18, 22, 15, 19], "pf_pos2": [7, np.nan, 6, 8, 4],
-        "bm_neg1": [8, 10, 6, 7, 100], "bm_neg2": [4, 2, 3, 1, 5],
+        "bm_neg1": [8, 10, 6, 7, 100], "bm_neg2": [4, 2, 3, 1, 50],
         "bm_pos1": [18, 16, 20, 13, 17], "bm_pos2": [6, 4, 5, 7, 100],
         "pf_right": [12.4, 9.7, 11.2, 8.9, 10.1],
         "bm_right": [11.0, 9.2, 10.8, np.nan, 9.4]
