@@ -1,10 +1,6 @@
 // assets/renderer.js
 window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
-window.dashAgGridComponentFunctions.SvgRenderer = function(props) {
-  return React.createElement('span', {dangerouslySetInnerHTML: {__html: props.value}});
-};
-
 window.dashAgGridComponentFunctions.HtmlRenderer = function(props) {
   return React.createElement('span', {dangerouslySetInnerHTML: {__html: props.value}});
 };

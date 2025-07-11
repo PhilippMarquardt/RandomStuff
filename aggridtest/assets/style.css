@@ -103,10 +103,9 @@
 
 
 
-.custom-grid .ag-cell[col-id="svg"] svg {
+.custom-grid .ag-cell[col-id="svg"] img {
   display: block;
   max-width: 100%;
   max-height: 100%;
-  width: auto;
-  height: auto;
+  margin: auto;
 }

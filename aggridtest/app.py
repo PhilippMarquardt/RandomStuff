@@ -88,7 +88,12 @@ def create_sdg_grid(df, title="SDG Revenue Exposure (%)"):
                          <br>
                          {f'{r.bm_right:.1f}%' if pd.notna(r.bm_right) else '-'}
                        </div>""", axis=1)
-
+    df_processed['svg'] = df_processed['svg'].apply(
+    lambda fname: (
+        f"<img src='/assets/{fname}' "
+        "style='max-width:100%; max-height:100%; display:block; margin:auto'/>"
+    )
+)
     chart_data_cols = ['pf_neg1', 'pf_neg2', 'pf_pos1', 'pf_pos2',
                        'bm_neg1', 'bm_neg2', 'bm_pos1', 'bm_pos2']
     df_processed[chart_data_cols] = df_processed[chart_data_cols].fillna(0)
@@ -122,7 +127,13 @@ def create_sdg_grid(df, title="SDG Revenue Exposure (%)"):
     </div>
     """
     columnDefs = [
-        {"headerName": "SDGs", "field": "svg", "cellRenderer": "SvgRenderer", "width": 200, "suppressSizeToFit": True},
+        {
+          "headerName": "SDGs",
+          "field": "svg",
+          "cellRenderer": "HtmlRenderer",
+          "width": 200,
+          "suppressSizeToFit": True
+        },
         {"headerName": "Portfolio / Benchmark", "field": "leftText", "cellRenderer": "HtmlRenderer", "width": 200, "suppressSizeToFit": True, "headerClass": "ag-center-header"},
         {
             "headerComponentParams": {"template": revenue_header_template},
@@ -177,7 +188,7 @@ if __name__ == '__main__':
     </svg>
     """
     sample_df = pd.DataFrame({
-        "svg": [SVG_ICON] * 5,
+        "svg": ["t.svg"] * 5,
         "pf_left": [11.0, 10.5, np.nan, 9.8, 8.6],
         "bm_left": [10.1, 9.7, 11.0, 8.5, 7.9],
         "pf_neg1": [10, 12, 8, 9, 7], "pf_neg2": [5, 3, 4, 2, 6],
@@ -191,36 +202,3 @@ if __name__ == '__main__':
     app = Dash(__name__, external_stylesheets=['/assets/styles.css'])
     app.layout = create_sdg_grid(sample_df)
     app.run_server(debug=True)
-
-
-# import xml.etree.ElementTree as ET
-
-# def load_svg_as_string_with_viewbox(path):
-#     """
-#     Reads an SVG file, ensures it has a viewBox and
-#     preserveAspectRatio, strips fixed width/height,
-#     and returns the cleaned-up SVG markup.
-#     """
-#     # 1. Parse the SVG into an ElementTree
-#     tree = ET.parse(path)
-#     svg = tree.getroot()  # <svg> element
-
-#     # 2. Read its width/height (will be strings like "300" or "300px")
-#     w = svg.get('width')
-#     h = svg.get('height')
-
-#     # 3. If no viewBox, set one covering the full width/height
-#     if w and h and not svg.get('viewBox'):
-#         # strip any "px"
-#         w_val = ''.join(ch for ch in w if ch.isdigit() or ch == '.')
-#         h_val = ''.join(ch for ch in h if ch.isdigit() or ch == '.')
-#         svg.set('viewBox', f"0 0 {w_val} {h_val}")
-#         svg.set('preserveAspectRatio', 'xMidYMid meet')
-
-#     # 4. Remove fixed sizing so CSS can flex it
-#     for attr in ('width', 'height'):
-#         if svg.get(attr):
-#             del svg.attrib[attr]
-
-#     # 5. Serialize back to string
-#     return ET.tostring(svg, encoding='unicode', method='xml')

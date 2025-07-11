@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="xMidYMid meet"
+>
+  <!-- Blue circle centered -->
+  <circle cx="50" cy="50" r="40" fill="#0074D9" />
+
+  <!-- White star overlay -->
+  <polygon
+    points="50,15 61,70 95,35 5,35 39,70"
+    fill="#FFFFFF"
+  />
+</svg>
