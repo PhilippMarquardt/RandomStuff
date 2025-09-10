@@ -1,0 +1,69 @@
+/* Additional custom styles for Dash app */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f9fafb; /* Fallback for bg-gray-50 */
+}
+
+/* Fallback styles in case TailwindCSS doesn't load */
+.min-h-screen { min-height: 100vh; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-1 { flex: 1; }
+.bg-white { background-color: white; }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.text-blue-600 { color: #2563eb; }
+.text-white { color: white; }
+.py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.text-center { text-align: center; }
+.font-bold { font-weight: 700; }
+.text-4xl { font-size: 2.25rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.transition-colors { transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out; }
+
+.dash-app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom component styles */
+.navbar-container {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.footer-container {
+    background: #1f2937;
+    color: white;
+    margin-top: auto;
+}
+
+/* Dash specific overrides */
+._dash-undo-redo {
+    display: none;
+}
+
+.dash-table-container {
+    font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column;
+        space-y: 2px;
+    }
+    
+    .hero-section {
+        padding: 3rem 1rem;
+    }
+}
