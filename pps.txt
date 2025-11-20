@@ -1,130 +1,305 @@
+import polars as pl
 import json
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Tuple
 
-def is_data_collection(d: Dict) -> bool:
-    """
-    Heuristic to determine if a dictionary is a 'Collection of Rows' 
-    (where we should truncate output) vs a 'Structural Node' (where we show all keys).
-    
-    Criteria for being a Collection:
-    1. Must be a dictionary of dictionaries (e.g. { "id1": {...}, "id2": {...} })
-    2. Keys look like IDs (numeric or short strings) 
-       OR 
-       Entries are homogeneous (share same schema keys).
-    """
-    if not d: return False
-    
-    keys = list(d.keys())
-    if not keys: return False
-    
-    # 1. Check Content Type: Values must be Dictionaries (Rows)
-    # Sampling the first item is usually sufficient
-    first_val = d[keys[0]]
-    if not isinstance(first_val, dict):
-        return False
+# ======================================================================
+# 1. SIMULATED DATABASE LAYER
+# ======================================================================
+class MockDatabaseService:
+    @staticmethod
+    def fetch_instrument_attributes(instrument_ids: List[int]) -> pl.DataFrame:
+        db_data = {
+            100: {"sector": "Technology", "currency": "USD", "asset_class": "Equity"},
+            200: {"sector": "Government", "currency": "USD", "asset_class": "Cash"},
+            999: {"sector": "Technology", "currency": "USD", "asset_class": "Equity"},
+            888: {"sector": "Communication", "currency": "USD", "asset_class": "Equity"},
+            666: {"sector": "Energy", "currency": "RUB", "asset_class": "Equity"},
+            111: {"sector": "Utilities", "currency": "EUR", "asset_class": "Debt"}, # Essential LT asset
+        }
+        rows = []
+        for i_id in instrument_ids:
+            attrs = db_data.get(i_id, {"sector": "Other", "currency": "USD", "asset_class": "Other"})
+            attrs["instrument_identifier"] = i_id
+            rows.append(attrs)
+        return pl.DataFrame(rows)
+
+    @staticmethod
+    def fetch_perspective_rules(config_id: str) -> List[Dict[str, Any]]:
+        if config_id == "404294674":
+            return [
+                {"criteria": {"column": "instrument_identifier", "operator_type": "!=", "value": 666}, "apply_to": "both"},
+                {"criteria": {"column": "asset_class", "operator_type": "!=", "value": "Cash"}, "apply_to": "both"}
+            ]
+        return []
+
+# ======================================================================
+# 2. LOGIC & EXPRESSION BUILDER (Optimized)
+# ======================================================================
+class PolarsExpressionBuilder:
+    @staticmethod
+    def normalize_value(val: Any, op: str) -> Any:
+        if op in ("in", "notin", "between", "notbetween") and isinstance(val, str):
+            parts = val.strip("[]").split(",")
+            normalized = []
+            for x in parts:
+                x = x.strip()
+                if x.isdigit(): normalized.append(int(x))
+                else: normalized.append(x.lower() if isinstance(x, str) else x)
+            return normalized
+        elif isinstance(val, str): return val.lower()
+        return val
+
+    @staticmethod
+    def _get_col_expr(col_name: str, as_string: bool = False) -> pl.Expr:
+        c = pl.col(col_name)
+        if as_string: return c.cast(pl.Utf8).str.to_lowercase()
+        return c
+
+    @staticmethod
+    def build_rules_expr(rules: List[Dict[str, Any]]) -> pl.Expr:
+        if not rules: return pl.lit(True)
+        combined_expr = None
         
-    # 2. Check Key Pattern (Strongest Signal)
-    # If keys are numeric strings ("0", "160046", "1.0"), it's definitely a collection.
-    numeric_keys = sum(1 for k in keys if str(k).replace('.', '', 1).isdigit())
-    if len(keys) > 0 and (numeric_keys / len(keys)) > 0.5:
-        return True
-        
-    # 3. Check Homogeneity (Secondary Signal for non-numeric IDs like "uuid-1", "uuid-2")
-    # If we have multiple items, check if they look like the same "type" of record.
-    if len(keys) > 1:
-        row_1_keys = set(d[keys[0]].keys())
-        row_2_keys = set(d[keys[1]].keys())
-        
-        # Jaccard Index: If rows share > 50% of their field names, it's a collection.
-        intersection = len(row_1_keys.intersection(row_2_keys))
-        union = len(row_1_keys.union(row_2_keys))
-        
-        if union > 0 and (intersection / union) > 0.5:
-            return True
+        for i, rule in enumerate(rules):
+            criteria = rule.get("criteria", {})
+            col_name = criteria["column"]
+            op = criteria.get("operator_type", "").lower()
+            raw_val = criteria.get("value")
             
-    return False
+            if op == "isnull": curr = pl.col(col_name).is_null()
+            elif op == "isnotnull": curr = pl.col(col_name).is_not_null()
+            else:
+                val = PolarsExpressionBuilder.normalize_value(raw_val, op)
+                is_str_op = isinstance(val, str) or (isinstance(val, list) and any(isinstance(x, str) for x in val))
+                col = PolarsExpressionBuilder._get_col_expr(col_name, as_string=is_str_op)
+                
+                if op == "=": curr = col.eq(val)
+                elif op == "!=": curr = col.ne(val)
+                elif op == ">": curr = col.gt(val)
+                elif op == "<": curr = col.lt(val)
+                elif op == "in": curr = col.is_in(val) if isinstance(val, list) else col.eq(val)
+                else: curr = pl.lit(False)
 
-def print_dict_structure(d: Any, indent: int = 0, parent_key: str = "root"):
-    """
-    Recursively prints the structure of a dictionary/list.
-    Uses dynamic detection to avoid spamming large data collections.
-    """
-    spacing = "  " * indent
-    type_name = type(d).__name__
-    
-    # 1. Handle Dictionaries
-    if isinstance(d, dict):
-        keys = list(d.keys())
-        count = len(keys)
-        print(f"{spacing}{parent_key}: {type_name} [{count} keys]")
-        
-        # --- DYNAMIC DETECTION ---
-        # Check if this dictionary is a "Collection of Rows" or a "Structural Container"
-        is_collection = is_data_collection(d)
-        
-        for i, key in enumerate(keys):
-            # Smart Truncation: If it's a collection, only show the first item schema
-            if is_collection and i >= 1:
-                print(f"{spacing}  ... (+ {count - 1} more items in '{parent_key}')")
-                break
+            apply_to = (rule.get("apply_to") or "both").lower()
+            if apply_to == "holding": curr = curr & pl.col("category").eq("holding")
+            elif apply_to == "reference": curr = curr & pl.col("category").eq("reference")
             
-            # Recurse
-            print_dict_structure(d[key], indent + 1, parent_key=str(key))
+            if i == 0: combined_expr = curr
+            else:
+                prev_rule = rules[i-1]
+                cond = prev_rule.get("condition_for_next_rule", "And").lower()
+                combined_expr = combined_expr | curr if cond == "or" else combined_expr & curr
+                
+        return combined_expr if combined_expr is not None else pl.lit(True)
 
-    # 2. Handle Lists
-    elif isinstance(d, list):
-        count = len(d)
-        print(f"{parent_key}: {type_name} [{count} items]")
+# ======================================================================
+# 3. MAIN PIPELINE CLASS (Dynamic Parsing & Scaling Fix)
+# ======================================================================
+class PerspectivePipeline:
+    def __init__(self):
+        self.df: pl.DataFrame = pl.DataFrame()
+
+    def load_perspective_json(self, json_data: Dict[str, Any]) -> 'PerspectivePipeline':
+        """
+        Parses nested JSON into a flat DataFrame.
+        FIX: Uses distinct record_type for complete vs essential lookthroughs.
+        """
+        dfs = []
+        def extract(data_dict, extra_metadata, record_type_suffix=""):
+            if not data_dict: return
+            rows = []
+            for node_id, attrs in data_dict.items():
+                row = attrs.copy()
+                row['node_id'] = str(node_id)
+                row.update(extra_metadata)
+                rows.append(row)
+            if rows: dfs.append(pl.DataFrame(rows, infer_schema_length=None))
+
+        # --- DYNAMIC SCANNING LOGIC ---
+        for key, value in json_data.items():
+            if not isinstance(value, dict) or "positions" not in value:
+                continue
+                
+            container_key = key
+            category_label = "holding" if container_key == "holding" else "reference"
+            
+            # 1. Extract Positions
+            extract(value.get("positions"), {
+                "category": category_label, "container": container_key, "record_type": "position"
+            })
+            
+            # 2. Extract COMPLETE Lookthroughs
+            extract(value.get("complete_lookthroughs"), {
+                "category": category_label, 
+                "container": container_key, 
+                "record_type": "lookthrough_complete" # <-- DISTINCT TYPE
+            })
+
+            # 3. Extract ESSENTIAL Lookthroughs
+            extract(value.get("essential_lookthroughs"), {
+                "category": category_label, 
+                "container": container_key, 
+                "record_type": "lookthrough_essential" # <-- DISTINCT TYPE
+            })
+
+        if dfs:
+            self.df = pl.concat(dfs, how="diagonal")
+            # Ensure integer IDs for joining
+            for col in ["instrument_identifier", "parent_instrument_id"]:
+                if col in self.df.columns:
+                    self.df = self.df.with_columns(pl.col(col).cast(pl.Int64, strict=False))
+        return self
+
+    def enrich_from_db(self) -> 'PerspectivePipeline':
+        if self.df.is_empty() or "instrument_identifier" not in self.df.columns: return self
+        unique_ids = self.df["instrument_identifier"].unique().to_list()
+        attributes_df = MockDatabaseService.fetch_instrument_attributes(unique_ids)
+        self.df = self.df.join(attributes_df, on="instrument_identifier", how="left")
+        return self
+
+    def apply_rules(self, config_id: str) -> 'PerspectivePipeline':
+        if self.df.is_empty(): return self
+        rules = MockDatabaseService.fetch_perspective_rules(config_id)
+        if rules:
+            expr = PolarsExpressionBuilder.build_rules_expr(rules)
+            self.df = self.df.filter(expr)
+        return self
+
+    # --- STAGE 1: Scale Top-Level Positions to 100% ---
+    def rescale_positions(self, weight_labels: List[str]) -> 'PerspectivePipeline':
+        if self.df.is_empty(): return self
+        valid_labels = [w for w in weight_labels if w in self.df.columns]
+
+        for label in valid_labels:
+            self.df = self.df.with_columns(pl.col(label).cast(pl.Float64, strict=False))
+            
+            container_sums = self.df.filter(
+                pl.col("record_type") == "position"
+            ).group_by("container").agg(
+                pl.col(label).sum().alias("pos_sum")
+            )
+
+            factors = container_sums.with_columns(
+                (1.0 / pl.col("pos_sum")).fill_nan(1.0).fill_null(1.0).alias("_pos_factor")
+            )
+
+            self.df = self.df.join(
+                factors, on="container", how="left"
+            ).with_columns(
+                pl.when(pl.col("record_type") == "position")
+                .then(pl.col(label) * pl.col("_pos_factor"))
+                .otherwise(pl.col(label))
+                .alias(label)
+            ).drop(["pos_sum", "_pos_factor"])
+
+        return self
+
+    # --- STAGE 2: Scale Lookthroughs to Parent ---
+    def rescale_lookthroughs(self, weight_labels: List[str]) -> 'PerspectivePipeline':
+        """
+        Uses pl.col("record_type").str.contains("lookthrough") to include both 
+        complete and essential types in one scaling operation.
+        """
+        if self.df.is_empty(): return self
+        valid_labels = [w for w in weight_labels if w in self.df.columns]
         
-        if count > 0:
-            print(f"{spacing}  - [0]: ", end="")
-            print_dict_structure(d[0], indent + 1, parent_key=f"{parent_key}[0]")
-            if count > 1:
-                print(f"{spacing}  ... (+ {count - 1} more items)")
-    
-    # 3. Handle Leaf Nodes
-    else:
-        preview = str(d)
-        if len(preview) > 50:
-            preview = preview[:50] + "..."
-        print(f"({type_name}) -> {preview}")
+        for label in valid_labels:
+            self.df = self.df.with_columns(pl.col(label).cast(pl.Float64, strict=False))
 
-# ==========================================
-# TEST RUNNER (Using a simulation of your full JSON structure)
-# ==========================================
+            # A. Targets (The Parents)
+            parents = self.df.filter(pl.col("record_type") == "position").select([
+                pl.col("instrument_identifier").alias("join_id"),
+                pl.col("container"),
+                pl.col(label).alias("target")
+            ])
+            
+            # B. Actuals (Sum of Children - all lookthrough types)
+            children_sums = self.df.filter(pl.col("record_type").str.contains("lookthrough")) \
+                .group_by(["parent_instrument_id", "container"]) \
+                .agg(pl.col(label).sum().alias("actual"))
+
+            # C. Factor (Target / Actual)
+            factors = parents.join(
+                children_sums, 
+                left_on=["join_id", "container"], 
+                right_on=["parent_instrument_id", "container"], 
+                how="inner"
+            ).with_columns(
+                (pl.col("target") / pl.col("actual")).fill_nan(1.0).fill_null(1.0).alias("_lt_factor")
+            )
+
+            # D. Apply
+            self.df = self.df.join(
+                factors.select(["join_id", "container", "_lt_factor"]),
+                left_on=["parent_instrument_id", "container"], 
+                right_on=["join_id", "container"], 
+                how="left"
+            ).with_columns(
+                # Apply scaling to all lookthrough types
+                pl.when(pl.col("record_type").str.contains("lookthrough"))
+                .then(pl.col(label) * pl.col("_lt_factor"))
+                .otherwise(pl.col(label))
+                .alias(label)
+            ).drop("_lt_factor")
+            
+        return self
+
+# ======================================================================
+# 4. EXECUTION SCENARIO
+# ======================================================================
 if __name__ == "__main__":
-    # Mock data with dynamic, nested structure
-    mock_data = {
-        "perspective_configurations": {
-            # This is a structural node, keys are IDs but contents are different (list vs dict)
-            "404294674": { "14": ["exclude_stuff"] },
-            "404294675": { "50": {"key": "value"} }
-        },
+    # INPUT DATA SCENARIO: Includes COMPLETE (0.4+0.2+0.3=0.9) and ESSENTIAL (0.05) LTs.
+    # Total LT sum for parent 100 is 0.95.
+    
+    input_json = {
         "holding": {
-            # Structural node
             "positions": {
-                # Collection (Numeric Keys)
-                "160046": { "instrument_identifier": 1, "weight": 1.0, "initial_weight": 0.5 },
-                "160047": { "instrument_identifier": 2, "weight": 1.0, "initial_weight": 0.5 }
+                "p1": {"instrument_identifier": 100, "weight": 0.9, "exposure": 900.0},
+                "p2": {"instrument_identifier": 200, "weight": 0.1, "exposure": 100.0}
             },
             "complete_lookthroughs": {
-                # Collection (Numeric Keys)
-                "0": { "parent_id": 1, "lt_weight": 0.1, "initial_weight": 0.1 },
-                "1": { "parent_id": 1, "lt_weight": 0.2, "initial_weight": 0.2 }
+                "lt1": {"instrument_identifier": 999, "parent_instrument_id": 100, "weight": 0.4, "exposure": 400.0},
+                "lt2": {"instrument_identifier": 666, "parent_instrument_id": 100, "weight": 0.2, "exposure": 200.0},
+                "lt3": {"instrument_identifier": 888, "parent_instrument_id": 100, "weight": 0.3, "exposure": 300.0}
+            },
+            "essential_lookthroughs": {
+                 "elt1": {"instrument_identifier": 111, "parent_instrument_id": 100, "weight": 0.05, "exposure": 50.0}
             }
         },
-        "contractual_reference_dynamic": {
-             # Structural node
+        "contractual_reference_custom_1": {
              "positions": {
-                 # Collection (Arbitrary String Keys, but homogeneous schema)
-                 "row_a": {"id": 10, "val": 100},
-                 "row_b": {"id": 11, "val": 200}
+                "r1": {"instrument_identifier": 100, "weight": 1.0, "exposure": 1000.0}
+             },
+             "complete_lookthroughs": {
+                 "lt_r1": {"instrument_identifier": 666, "parent_instrument_id": 100, "weight": 1.0, "exposure": 1000.0}
              }
-        },
-        "system_version_timestamp": "2025-11-20 12:44:00.000000"
+        }
     }
+    
+    print("--- Starting Pipeline ---")
+    
+    pipeline = PerspectivePipeline()
+    
+    df_final = (
+        pipeline
+        .load_perspective_json(input_json)
+        .enrich_from_db()                             # Adds 'asset_class' (ID 111 is Debt, ID 200 is Cash)
+        .apply_rules("404294674")                     # Filters Cash (200) and Sanctioned (666)
+        .rescale_positions(["weight", "exposure"])    # Scales Pos 100 from 0.9 -> 1.0
+        .rescale_lookthroughs(["weight", "exposure"]) # Scales remaining LTs to match new parent 1.0
+        .df
+    )
+    
+    print("\n--- Final Result (After Filtering and Scaling) ---")
+    
+    # Verification of Filtered/Scaling effect on Holding (Parent 100):
+    # Initial Sum (LTs for 100) = 0.4 (999) + 0.2 (666) + 0.3 (888) + 0.05 (111) = 0.95
+    # Filtered Sum = 0.4 (999) + 0.3 (888) + 0.05 (111) = 0.75
+    # Final Factor should be 1.0 (New Parent Weight) / 0.75 (Filtered Sum) = 1.3333
+    
+    cols = ["node_id", "record_type", "container", "instrument_identifier", "weight", "asset_class"]
+    print(df_final.select(cols).sort(["container", "record_type", "node_id"], descending=True))
 
-    print("--- DYNAMIC STRUCTURE ANALYSIS ---")
-    print("This confirms the parser can handle any amount of reference containers.")
-    print("-" * 35)
-    print_dict_structure(mock_data)
+    print("\n--- Verification of Lookthrough Types ---")
+    print("Unique record_type entries:")
+    print(df_final.select("record_type").unique())
