@@ -1,0 +1,84 @@
+{
+  "instrument_identifier_type": "instrument_id",
+  "position_weight_labels": ["weight"],
+  "lookthrough_weight_labels": ["weight"],
+  "perspective_configurations": {
+    "test_3001": {
+      "3001": []
+    },
+    "test_3002": {
+      "3002": []
+    },
+    "test_3003": {
+      "3003": []
+    },
+    "test_3004": {
+      "3004": []
+    },
+    "test_3005": {
+      "3005": []
+    }
+  },
+  "test_container": {
+    "position_type": "test_container",
+    "positions": {
+      "pos_1": {
+        "instrument_identifier": 101,
+        "instrument_id": 101,
+        "sub_portfolio_id": "sub_A",
+        "weight": 10.0,
+        "position_source_type_id": 1,
+        "liquidity_type_id": 1,
+        "is_class_position": false,
+        "is_blocked": false
+      },
+      "pos_2": {
+        "instrument_identifier": 102,
+        "instrument_id": 102,
+        "sub_portfolio_id": "sub_A",
+        "weight": 20.0,
+        "position_source_type_id": 1,
+        "liquidity_type_id": 2,
+        "is_class_position": false,
+        "is_blocked": false
+      },
+      "pos_3": {
+        "instrument_identifier": 103,
+        "instrument_id": 103,
+        "sub_portfolio_id": "sub_A",
+        "weight": 30.0,
+        "position_source_type_id": 1,
+        "liquidity_type_id": 1,
+        "is_class_position": false,
+        "is_blocked": false
+      }
+    },
+    "essential_lookthroughs": {
+      "lt_1": {
+        "instrument_identifier": 201,
+        "instrument_id": 201,
+        "parent_instrument_id": 101,
+        "sub_portfolio_id": "sub_A",
+        "weight": 5.0,
+        "position_source_type_id": 1,
+        "liquidity_type_id": 1,
+        "is_class_position": false,
+        "is_blocked": false
+      },
+      "lt_2": {
+        "instrument_identifier": 202,
+        "instrument_id": 202,
+        "parent_instrument_id": 101,
+        "sub_portfolio_id": "sub_A",
+        "weight": 8.0,
+        "position_source_type_id": 1,
+        "liquidity_type_id": 1,
+        "is_class_position": false,
+        "is_blocked": false
+      }
+    },
+    "sub_portfolios": [
+      {"id": "sub_A", "name": "Sub Portfolio A"}
+    ]
+  }
+}

@@ -1,0 +1,139 @@
+CORRECTED MANUAL CALCULATIONS FOR WEIGHT SCALING TESTS
+=======================================================
+
+After reviewing the original implementation, the logic is:
+
+1. scale_holdings_to_100_percent:
+   Divides position weights by (sum of position weights + sum of essential lookthrough weights)
+
+2. scale_lookthroughs_to_100_percent:
+   Scales lookthroughs to 100% PER PARENT (grouped by parent_instrument_id)
+
+Initial Data:
+-------------
+Positions:
+  pos_A: weight=20.0, instrument_id=101
+  pos_B: weight=30.0, instrument_id=102
+  pos_C: weight=50.0, instrument_id=103
+  Total: 100.0
+
+Lookthroughs:
+  lt_A:  weight=10.0, parent_instrument_id=101 (belongs to pos_A)
+  lt_B1: weight=20.0, parent_instrument_id=102 (belongs to pos_B)
+  lt_B2: weight=15.0, parent_instrument_id=102 (belongs to pos_B)
+  Total: 45.0
+
+
+TEST 1001: Filter C and scale_holdings_to_100_percent
+------------------------------------------------------
+Rule: instrument_id != 103
+Modifier: scale_holdings_to_100_percent
+
+Step 1 - Filter:
+  Remove pos_C (instrument_id=103)
+  Keep: pos_A (20.0), pos_B (30.0)
+  Position total: 50.0
+
+Step 2 - Cascade removal:
+  pos_A kept → lt_A kept (10.0)
+  pos_B kept → lt_B1 kept (20.0), lt_B2 kept (15.0)
+  pos_C removed → no lookthroughs affected
+  Essential lookthrough total: 45.0
+
+Step 3 - Apply scale_holdings_to_100_percent:
+  Denominator = position sum + essential lookthrough sum
+  Denominator = 50.0 + 45.0 = 95.0
+
+  pos_A: 20.0 / 95.0 = 0.210526
+  pos_B: 30.0 / 95.0 = 0.315789
+  Sum: 0.210526 + 0.315789 = 0.526316
+
+  Lookthroughs NOT scaled:
+  lt_A: 10.0 (unchanged)
+  lt_B1: 20.0 (unchanged)
+  lt_B2: 15.0 (unchanged)
+
+Expected Output:
+  Positions: pos_A=0.210526, pos_B=0.315789 (sum=0.526316)
+  Lookthroughs: lt_A=10.0, lt_B1=20.0, lt_B2=15.0 (sum=45.0)
+
+
+TEST 1002: No filter, scale_lookthroughs_to_100_percent
+---------------------------------------------------------
+Rule: None (all pass)
+Modifier: scale_lookthroughs_to_100_percent
+
+Step 1 - No filter:
+  All positions kept: pos_A (20.0), pos_B (30.0), pos_C (50.0)
+  All lookthroughs kept: lt_A (10.0), lt_B1 (20.0), lt_B2 (15.0)
+
+Step 2 - Apply scale_lookthroughs_to_100_percent:
+  This scales lookthroughs PER PARENT, not globally!
+
+  For parent 101 (pos_A):
+    lt_A: 10.0 / 10.0 = 1.0
+
+  For parent 102 (pos_B):
+    Total for parent 102: 20.0 + 15.0 = 35.0
+    lt_B1: 20.0 / 35.0 = 0.571429
+    lt_B2: 15.0 / 35.0 = 0.428571
+
+  Total of all lookthroughs: 1.0 + 0.571429 + 0.428571 = 2.0
+
+  Positions NOT scaled:
+  pos_A: 20.0 (unchanged)
+  pos_B: 30.0 (unchanged)
+  pos_C: 50.0 (unchanged)
+
+Expected Output:
+  Positions: pos_A=20.0, pos_B=30.0, pos_C=50.0 (sum=100.0)
+  Lookthroughs: lt_A=1.0, lt_B1=0.571429, lt_B2=0.428571 (sum=2.0)
+
+
+TEST 1003: Filter B, scale both holdings and lookthroughs
+----------------------------------------------------------
+Rule: instrument_id != 102
+Modifiers: scale_holdings_to_100_percent, scale_lookthroughs_to_100_percent
+
+Step 1 - Filter:
+  Remove pos_B (instrument_id=102)
+  Keep: pos_A (20.0), pos_C (50.0)
+  Position total: 70.0
+
+Step 2 - Cascade removal:
+  pos_A kept → lt_A kept (10.0)
+  pos_B REMOVED → lt_B1 REMOVED, lt_B2 REMOVED
+  pos_C kept → no lookthroughs for C
+  Essential lookthrough total: 10.0
+
+Step 3 - Apply scale_holdings_to_100_percent:
+  Denominator = 70.0 + 10.0 = 80.0
+  pos_A: 20.0 / 80.0 = 0.25
+  pos_C: 50.0 / 80.0 = 0.625
+  Sum: 0.25 + 0.625 = 0.875
+
+Step 4 - Apply scale_lookthroughs_to_100_percent:
+  Only lt_A remains (parent 101):
+  lt_A: 10.0 / 10.0 = 1.0
+
+Expected Output:
+  Positions: pos_A=0.25, pos_C=0.625 (sum=0.875)
+  Lookthroughs: lt_A=1.0 (sum=1.0)
+
+
+TEST 1004: Edge case - filter all
+----------------------------------
+Rule: instrument_id > 200
+Modifier: scale_holdings_to_100_percent
+
+Step 1 - Filter:
+  All positions have instrument_id ≤ 103
+  Remove: ALL positions
+  Keep: NONE
+
+Step 2 - Cascade removal:
+  All parents removed → all lookthroughs removed
+
+Expected Output:
+  Positions: EMPTY
+  Lookthroughs: EMPTY

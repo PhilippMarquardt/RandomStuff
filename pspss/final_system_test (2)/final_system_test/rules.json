@@ -1,0 +1,119 @@
+{
+  "perspectives": {
+    "2001": {
+      "id": 2001,
+      "name": "Test 2001: Exclude Simulated Trades",
+      "rules": [],
+      "is_active": true
+    },
+    "2002": {
+      "id": 2002,
+      "name": "Test 2002: Exclude Trade Cash",
+      "rules": [
+        {
+          "criteria": "{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"liquidity_type_id\", \"operator_type\": \"!=\", \"value\": 6}",
+          "apply_to": "both"
+        }
+      ],
+      "is_active": true
+    },
+    "2003": {
+      "id": 2003,
+      "name": "Test 2003: Exclude Simulated Cash",
+      "rules": [],
+      "is_active": true
+    },
+    "2004": {
+      "id": 2004,
+      "name": "Test 2004: Exclude Class Positions",
+      "rules": [],
+      "is_active": true
+    },
+    "2005": {
+      "id": 2005,
+      "name": "Test 2005: Multiple PreProcessing",
+      "rules": [
+        {
+          "criteria": "{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"liquidity_type_id\", \"operator_type\": \"!=\", \"value\": 6}",
+          "apply_to": "both"
+        }
+      ],
+      "is_active": true
+    },
+    "2006": {
+      "id": 2006,
+      "name": "Test 2006: PostProcessing OR Logic",
+      "rules": [
+        {
+          "criteria": "{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"position_source_type_id\", \"operator_type\": \"!=\", \"value\": 10}",
+          "apply_to": "both"
+        }
+      ],
+      "is_active": true
+    },
+    "2007": {
+      "id": 2007,
+      "name": "Test 2007: Modifier Override",
+      "rules": [
+        {
+          "criteria": "{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"liquidity_type_id\", \"operator_type\": \"=\", \"value\": 1}",
+          "apply_to": "both"
+        }
+      ],
+      "is_active": true
+    },
+    "2014": {
+      "id": 2014,
+      "name": "Test 2014: Cascade Removal",
+      "rules": [
+        {
+          "criteria": "{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"In\", \"value\": [101, 103, 104]}",
+          "apply_to": "both"
+        }
+      ],
+      "is_active": true
+    }
+  },
+  "modifiers": {
+    "exclude_simulated_trades": {
+      "type": "PreProcessing",
+      "rule": {
+        "criteria": "{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"position_source_type_id\", \"operator_type\": \"!=\", \"value\": 10}",
+        "apply_to": "both"
+      }
+    },
+    "exclude_trade_cash": {
+      "type": "PreProcessing",
+      "rule": {
+        "criteria": "{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"liquidity_type_id\", \"operator_type\": \"!=\", \"value\": 6}",
+        "apply_to": "both"
+      }
+    },
+    "exclude_simulated_cash": {
+      "type": "PreProcessing",
+      "rule": {
+        "criteria": "{\"not\": {\"and\": [{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"position_source_type_id\", \"operator_type\": \"=\", \"value\": 10}, {\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"liquidity_type_id\", \"operator_type\": \"=\", \"value\": 5}]}}",
+        "apply_to": "both"
+      }
+    },
+    "exclude_class_positions": {
+      "type": "PreProcessing",
+      "rule": {
+        "criteria": "{\"table_name\": \"position_data\", \"column\": \"is_class_position\", \"operator_type\": \"!=\", \"value\": true}",
+        "apply_to": "both"
+      }
+    },
+    "include_all_trade_cash": {
+      "type": "PostProcessing",
+      "rule_result_operator": "or",
+      "rule": {
+        "criteria": "{\"table_name\": \"INSTRUMENT_CATEGORIZATION\", \"column\": \"liquidity_type_id\", \"operator_type\": \"=\", \"value\": 6}",
+        "apply_to": "both"
+      }
+    }
+  },
+  "default_modifiers": [],
+  "modifier_overrides": {
+    "exclude_simulated_trades": ["include_all_trade_cash"]
+  }
+}

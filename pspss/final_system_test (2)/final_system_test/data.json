@@ -1,0 +1,41 @@
+{
+  "instrument_identifier_type": "instrument_id",
+  "position_weight_labels": ["weight"],
+  "lookthrough_weight_labels": ["weight"],
+  "ed": "2024-01-01",
+  "perspective_configurations": {
+    "test_2001": { "2001": ["exclude_simulated_trades"] },
+    "test_2002": { "2002": ["exclude_trade_cash"] },
+    "test_2003": { "2003": ["exclude_simulated_cash"] },
+    "test_2004": { "2004": ["exclude_class_positions"] },
+    "test_2005": { "2005": ["exclude_simulated_trades", "exclude_class_positions"] },
+    "test_2006": { "2006": ["include_all_trade_cash"] },
+    "test_2007": { "2007": ["exclude_simulated_trades", "include_all_trade_cash"] },
+    "test_2014": { "2014": [] }
+  },
+  "main_portfolio": {
+    "position_type": "holding",
+    "positions": {
+      "pos_1": { "instrument_identifier": 101, "weight": 10.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": false },
+      "pos_2": { "instrument_identifier": 102, "weight": 10.0, "position_source_type_id": 1, "liquidity_type_id": 2, "is_class_position": false },
+      "pos_3": { "instrument_identifier": 103, "weight": 10.0, "position_source_type_id": 10, "liquidity_type_id": 1, "is_class_position": false },
+      "pos_4": { "instrument_identifier": 104, "weight": 10.0, "position_source_type_id": 1, "liquidity_type_id": 6, "is_class_position": false },
+      "pos_5": { "instrument_identifier": 105, "weight": 10.0, "position_source_type_id": 10, "liquidity_type_id": 5, "is_class_position": false },
+      "pos_6": { "instrument_identifier": 106, "weight": 10.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": true },
+      "pos_7": { "instrument_identifier": 107, "weight": 10.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": false },
+      "pos_8": { "instrument_identifier": 108, "weight": 10.0, "position_source_type_id": 1, "liquidity_type_id": 6, "is_class_position": true },
+      "pos_9": { "instrument_identifier": 109, "weight": 10.0, "position_source_type_id": 10, "liquidity_type_id": 6, "is_class_position": false },
+      "pos_10": { "instrument_identifier": 110, "weight": 10.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": false }
+    },
+    "essential_lookthroughs": {
+      "lt_1": { "instrument_identifier": 201, "parent_instrument_id": 101, "weight": 5.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": false },
+      "lt_2": { "instrument_identifier": 202, "parent_instrument_id": 101, "weight": 5.0, "position_source_type_id": 1, "liquidity_type_id": 2, "is_class_position": false },
+      "lt_3": { "instrument_identifier": 203, "parent_instrument_id": 102, "weight": 5.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": false },
+      "lt_4": { "instrument_identifier": 204, "parent_instrument_id": 103, "weight": 5.0, "position_source_type_id": 10, "liquidity_type_id": 1, "is_class_position": false },
+      "lt_5": { "instrument_identifier": 205, "parent_instrument_id": 104, "weight": 5.0, "position_source_type_id": 1, "liquidity_type_id": 6, "is_class_position": false },
+      "lt_6": { "instrument_identifier": 206, "parent_instrument_id": 104, "weight": 5.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": true },
+      "lt_7": { "instrument_identifier": 207, "parent_instrument_id": 105, "weight": 5.0, "position_source_type_id": 10, "liquidity_type_id": 5, "is_class_position": false },
+      "lt_8": { "instrument_identifier": 208, "parent_instrument_id": 106, "weight": 5.0, "position_source_type_id": 1, "liquidity_type_id": 1, "is_class_position": true }
+    }
+  }
+}

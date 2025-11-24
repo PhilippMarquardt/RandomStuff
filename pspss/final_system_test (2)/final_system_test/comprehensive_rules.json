@@ -1,0 +1,397 @@
+{
+  "system_version_timestamp": "2025-01-16",
+  "perspectives": [
+    {
+      "id": 2001,
+      "name": "Test PreProcessing: exclude_simulated_trades",
+      "is_active": true,
+      "is_supported": true,
+      "rules": []
+    },
+    {
+      "id": 2002,
+      "name": "Test PreProcessing: exclude_trade_cash",
+      "is_active": true,
+      "is_supported": true,
+      "rules": []
+    },
+    {
+      "id": 2003,
+      "name": "Test PreProcessing: exclude_simulated_cash",
+      "is_active": true,
+      "is_supported": true,
+      "rules": []
+    },
+    {
+      "id": 2004,
+      "name": "Test PreProcessing: exclude_class_positions",
+      "is_active": true,
+      "is_supported": true,
+      "rules": []
+    },
+    {
+      "id": 2005,
+      "name": "Test PreProcessing: Multiple modifiers combined",
+      "is_active": true,
+      "is_supported": true,
+      "rules": []
+    },
+    {
+      "id": 2006,
+      "name": "Test PostProcessing: include_all_trade_cash (OR logic)",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"position_source_type_id\", \"operator_type\": \"!=\", \"value\": 10}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2007,
+      "name": "Test Modifier Override: exclude_simulated_trades overrides include_all_trade_cash",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"liquidity_type_id\", \"operator_type\": \"=\", \"value\": 1}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2008,
+      "name": "Test Scaling: scale_holdings single sub_portfolio",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 106}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2009,
+      "name": "Test Scaling: scale_lookthroughs per parent and sub_portfolio",
+      "is_active": true,
+      "is_supported": true,
+      "rules": []
+    },
+    {
+      "id": 2010,
+      "name": "Test Scaling: Both modifiers combined",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"!=\", \"value\": 105}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2011,
+      "name": "Test Complex Nested Criteria: Deep AND/OR",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"or\": [{\"and\": [{\"table_name\": \"position_data\", \"column\": \"position_source_type_id\", \"operator_type\": \"=\", \"value\": 1}, {\"table_name\": \"position_data\", \"column\": \"liquidity_type_id\", \"operator_type\": \"In\", \"value\": \"[1, 2, 3]\"}]}, {\"table_name\": \"position_data\", \"column\": \"is_class_position\", \"operator_type\": \"=\", \"value\": true}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2012,
+      "name": "Test Multiple Rules with AND condition",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"position_source_type_id\", \"operator_type\": \"=\", \"value\": 1}",
+          "apply_to": "both",
+          "condition_for_next_rule": "And"
+        },
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"liquidity_type_id\", \"operator_type\": \"!=\", \"value\": 6}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2013,
+      "name": "Test Multiple Rules with OR condition",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 103}",
+          "apply_to": "both",
+          "condition_for_next_rule": "Or"
+        },
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"is_class_position\", \"operator_type\": \"=\", \"value\": true}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2014,
+      "name": "Test Cascade Removal: Complex parent/child",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"In\", \"value\": \"[101, 103, 104]\"}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2015,
+      "name": "Test Multiple Sub Portfolios: Different filtering",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"sub_portfolio_id\", \"operator_type\": \"=\", \"value\": \"sub_A\"}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2016,
+      "name": "Test IsNull and IsNotNull operators",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"is_blocked\", \"operator_type\": \"=\", \"value\": false}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2017,
+      "name": "Test Between operator",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"Between\", \"value\": [102, 105]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2018,
+      "name": "Test Edge Case: Filter all positions",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 999}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2019,
+      "name": "Test Edge Case: Single position remains",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"=\", \"value\": 101}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 2020,
+      "name": "Test apply_to holding vs lookthrough",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 105}",
+          "apply_to": "holding"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "exclude_simulated_trades": {
+      "name": "exclude_simulated_trades",
+      "type": "PreProcessingFilteringModifier",
+      "rule": {
+        "criteria": {
+          "table_name": "position_data",
+          "column": "position_source_type_id",
+          "operator_type": "!=",
+          "value": 10
+        },
+        "apply_to": "both"
+      },
+      "override_modifiers": ["include_all_trade_cash", "include_trade_cash_within_perspective"]
+    },
+    "exclude_trade_cash": {
+      "name": "exclude_trade_cash",
+      "type": "PreProcessingFilteringModifier",
+      "rule": {
+        "criteria": {
+          "table_name": "position_data",
+          "column": "liquidity_type_id",
+          "operator_type": "!=",
+          "value": 6
+        },
+        "apply_to": "both"
+      }
+    },
+    "exclude_simulated_cash": {
+      "name": "exclude_simulated_cash",
+      "type": "PreProcessingFilteringModifier",
+      "rule": {
+        "criteria": {
+          "or": [
+            {
+              "table_name": "position_data",
+              "column": "position_source_type_id",
+              "operator_type": "!=",
+              "value": 10
+            },
+            {
+              "table_name": "position_data",
+              "column": "liquidity_type_id",
+              "operator_type": "!=",
+              "value": 5
+            }
+          ]
+        },
+        "apply_to": "both"
+      },
+      "override_modifiers": ["exclude_perspective_level_simulated_cash", "include_simulated_cash"]
+    },
+    "exclude_class_positions": {
+      "name": "exclude_class_positions",
+      "type": "PreProcessingFilteringModifier",
+      "rule": {
+        "criteria": {
+          "table_name": "position_data",
+          "column": "is_class_position",
+          "operator_type": "!=",
+          "value": true
+        },
+        "apply_to": "both"
+      }
+    },
+    "exclude_blocked_positions": {
+      "name": "exclude_blocked_positions",
+      "type": "PreProcessingFilteringModifier",
+      "rule": {
+        "criteria": {
+          "table_name": "position_data",
+          "column": "is_blocked",
+          "operator_type": "!=",
+          "value": true
+        },
+        "apply_to": "both"
+      }
+    },
+    "include_all_trade_cash": {
+      "name": "include_all_trade_cash",
+      "type": "TradeCashTreatmentPostProcessingModifier",
+      "rule_result_operator": "or",
+      "rule": {
+        "criteria": {
+          "table_name": "position_data",
+          "column": "liquidity_type_id",
+          "operator_type": "=",
+          "value": 6
+        },
+        "apply_to": "both"
+      }
+    },
+    "include_trade_cash_within_perspective": {
+      "name": "include_trade_cash_within_perspective",
+      "type": "TradeCashTreatmentPostProcessingModifier",
+      "rule_result_operator": "or",
+      "rule": {
+        "criteria": {
+          "table_name": "position_data",
+          "column": "liquidity_type_id",
+          "operator_type": "=",
+          "value": 6
+        },
+        "apply_to": "both"
+      }
+    },
+    "exclude_perspective_level_simulated_cash": {
+      "name": "exclude_perspective_level_simulated_cash",
+      "type": "TradeCashTreatmentPostProcessingModifier",
+      "rule": {
+        "criteria": {
+          "or": [
+            {
+              "table_name": "position_data",
+              "column": "position_source_type_id",
+              "operator_type": "!=",
+              "value": 10
+            },
+            {
+              "table_name": "position_data",
+              "column": "liquidity_type_id",
+              "operator_type": "!=",
+              "value": 5
+            }
+          ]
+        },
+        "apply_to": "both"
+      },
+      "rule_result_operator": "or"
+    },
+    "include_simulated_cash": {
+      "name": "include_simulated_cash",
+      "type": "SimulatedCashPostProcessingModifier",
+      "rule": {
+        "criteria": {
+          "and": [
+            {
+              "table_name": "position_data",
+              "column": "position_source_type_id",
+              "operator_type": "=",
+              "value": 10
+            },
+            {
+              "table_name": "position_data",
+              "column": "liquidity_type_id",
+              "operator_type": "=",
+              "value": 5
+            }
+          ]
+        },
+        "apply_to": "both"
+      },
+      "rule_result_operator": "or"
+    },
+    "scale_holdings_to_100_percent": {
+      "name": "scale_holdings_to_100_percent",
+      "type": "ScalingModifier",
+      "rule": null
+    },
+    "scale_lookthroughs_to_100_percent": {
+      "name": "scale_lookthroughs_to_100_percent",
+      "type": "ScalingModifier",
+      "rule": null
+    }
+  },
+  "modifier_overrides": {
+    "exclude_simulated_trades": ["include_all_trade_cash", "include_trade_cash_within_perspective"],
+    "exclude_simulated_cash": ["exclude_perspective_level_simulated_cash", "include_simulated_cash"],
+    "include_all_trade_cash": ["exclude_perspective_level_simulated_cash"],
+    "include_trade_cash_within_perspective": ["exclude_perspective_level_simulated_cash"],
+    "exclude_trade_cash": ["exclude_perspective_level_simulated_cash"]
+  }
+}

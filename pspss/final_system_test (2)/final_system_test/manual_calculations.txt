@@ -1,0 +1,130 @@
+MANUAL CALCULATIONS FOR WEIGHT SCALING TESTS
+=============================================
+
+Initial Data:
+-------------
+Positions:
+  pos_A: weight=20.0, instrument_id=101
+  pos_B: weight=30.0, instrument_id=102
+  pos_C: weight=50.0, instrument_id=103
+  Total: 100.0
+
+Lookthroughs:
+  lt_A:  weight=10.0, parent_instrument_id=101 (belongs to pos_A)
+  lt_B1: weight=20.0, parent_instrument_id=102 (belongs to pos_B)
+  lt_B2: weight=15.0, parent_instrument_id=102 (belongs to pos_B)
+  Total: 45.0
+
+
+TEST 1001: Filter C and scale_holdings_to_100_percent
+------------------------------------------------------
+Rule: instrument_id != 103
+Modifier: scale_holdings_to_100_percent
+
+Step 1 - Filter:
+  Remove pos_C (instrument_id=103)
+  Keep: pos_A (20.0), pos_B (30.0)
+  Total after filter: 50.0
+
+Step 2 - Cascade removal:
+  pos_A kept → lt_A kept (10.0)
+  pos_B kept → lt_B1 kept (20.0), lt_B2 kept (15.0)
+  pos_C removed → no lookthroughs affected
+
+Step 3 - Apply scale_holdings_to_100_percent:
+  Scaling factor = 1.0 / 50.0 = 0.02
+  pos_A: 20.0 * 0.02 = 0.4
+  pos_B: 30.0 * 0.02 = 0.6
+  Sum: 0.4 + 0.6 = 1.0 ✓
+
+  Lookthroughs NOT scaled by this modifier:
+  lt_A: 10.0 (unchanged)
+  lt_B1: 20.0 (unchanged)
+  lt_B2: 15.0 (unchanged)
+
+Expected Output:
+  Positions: pos_A=0.4, pos_B=0.6 (sum=1.0)
+  Lookthroughs: lt_A=10.0, lt_B1=20.0, lt_B2=15.0 (sum=45.0)
+
+
+TEST 1002: No filter, scale_lookthroughs_to_100_percent
+---------------------------------------------------------
+Rule: None (all pass)
+Modifier: scale_lookthroughs_to_100_percent
+
+Step 1 - No filter:
+  All positions kept: pos_A (20.0), pos_B (30.0), pos_C (50.0)
+  All lookthroughs kept: lt_A (10.0), lt_B1 (20.0), lt_B2 (15.0)
+
+Step 2 - Apply scale_lookthroughs_to_100_percent:
+  Total lookthrough weight = 10.0 + 20.0 + 15.0 = 45.0
+  Scaling factor = 1.0 / 45.0 = 0.022222...
+
+  lt_A:  10.0 / 45.0 = 0.222222...
+  lt_B1: 20.0 / 45.0 = 0.444444...
+  lt_B2: 15.0 / 45.0 = 0.333333...
+  Sum: 0.222222 + 0.444444 + 0.333333 = 1.0 ✓
+
+  Positions NOT scaled by this modifier:
+  pos_A: 20.0 (unchanged)
+  pos_B: 30.0 (unchanged)
+  pos_C: 50.0 (unchanged)
+
+Expected Output:
+  Positions: pos_A=20.0, pos_B=30.0, pos_C=50.0 (sum=100.0)
+  Lookthroughs: lt_A≈0.222222, lt_B1≈0.444444, lt_B2≈0.333333 (sum=1.0)
+
+
+TEST 1003: Filter B, scale both holdings and lookthroughs
+----------------------------------------------------------
+Rule: instrument_id != 102
+Modifiers: scale_holdings_to_100_percent, scale_lookthroughs_to_100_percent
+
+Step 1 - Filter:
+  Remove pos_B (instrument_id=102)
+  Keep: pos_A (20.0), pos_C (50.0)
+  Total after filter: 70.0
+
+Step 2 - Cascade removal:
+  pos_A kept → lt_A kept (10.0)
+  pos_B REMOVED → lt_B1 REMOVED, lt_B2 REMOVED
+  pos_C kept → no lookthroughs for C
+  Lookthroughs after cascade: lt_A (10.0)
+
+Step 3 - Apply scale_holdings_to_100_percent:
+  Scaling factor = 1.0 / 70.0 = 0.014285...
+  pos_A: 20.0 / 70.0 = 0.285714...
+  pos_C: 50.0 / 70.0 = 0.714285...
+  Sum: 0.285714 + 0.714285 = 1.0 ✓
+
+Step 4 - Apply scale_lookthroughs_to_100_percent:
+  Only lt_A remains with weight 10.0
+  Scaling factor = 1.0 / 10.0 = 0.1
+  lt_A: 10.0 / 10.0 = 1.0
+  Sum: 1.0 ✓
+
+Expected Output:
+  Positions: pos_A≈0.285714, pos_C≈0.714286 (sum=1.0)
+  Lookthroughs: lt_A=1.0 (sum=1.0)
+
+
+TEST 1004: Edge case - filter all
+----------------------------------
+Rule: instrument_id > 200
+Modifier: scale_holdings_to_100_percent
+
+Step 1 - Filter:
+  All positions have instrument_id ≤ 103
+  Remove: pos_A (101), pos_B (102), pos_C (103)
+  Keep: NONE
+
+Step 2 - Cascade removal:
+  All parents removed → all lookthroughs removed
+  Keep: NONE
+
+Step 3 - Apply scale_holdings_to_100_percent:
+  No positions to scale
+
+Expected Output:
+  Positions: EMPTY
+  Lookthroughs: EMPTY

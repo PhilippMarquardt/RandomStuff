@@ -1,0 +1,252 @@
+================================================================================
+COMPREHENSIVE TEST SUITE - GEMINI.PY VERIFICATION
+================================================================================
+
+================================================================================
+TEST 2001: exclude_simulated_trades (PreProcessing)
+================================================================================
+
+Manual calculation:
+  Initial positions: pos_1 through pos_10
+  Filter: position_source_type_id != 10
+  Removed: pos_3 (type=10), pos_5 (type=10), pos_9 (type=10)
+  Kept: pos_1, pos_2, pos_4, pos_6, pos_7, pos_8, pos_10
+
+  Initial lookthroughs: lt_1 through lt_8
+  Removed: lt_4 (type=10), lt_7 (type=10)
+  Cascade: None (parents of removed LTs are still present)
+  Kept: lt_1, lt_2, lt_3, lt_5, lt_6, lt_8
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_10', 'pos_2', 'pos_4', 'pos_6', 'pos_7', 'pos_8']
+  Actual positions:   ['pos_1', 'pos_10', 'pos_2', 'pos_4', 'pos_6', 'pos_7', 'pos_8']
+  Match: True
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_3', 'lt_5', 'lt_6', 'lt_8']
+  Actual lookthroughs:   ['lt_1', 'lt_2', 'lt_3', 'lt_5', 'lt_6', 'lt_8']
+  Match: True
+
+[PASS]
+
+================================================================================
+TEST 2002: exclude_trade_cash (PreProcessing)
+================================================================================
+
+Manual calculation:
+  Filter: liquidity_type_id != 6
+  Removed positions: pos_4 (liq=6), pos_8 (liq=6), pos_9 (liq=6)
+  Kept: pos_1, pos_2, pos_3, pos_5, pos_6, pos_7, pos_10
+
+  Removed lookthroughs: lt_5 (liq=6)
+  Cascade: None
+  Kept: lt_1, lt_2, lt_3, lt_4, lt_6, lt_7, lt_8
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_10', 'pos_2', 'pos_3', 'pos_5', 'pos_6', 'pos_7']
+  Actual positions:   ['pos_1', 'pos_10', 'pos_2', 'pos_3', 'pos_5', 'pos_6', 'pos_7']
+  Match: True
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_3', 'lt_4', 'lt_6', 'lt_7', 'lt_8']
+  Actual lookthroughs:   ['lt_1', 'lt_2', 'lt_3', 'lt_4', 'lt_7', 'lt_8']
+  Match: False
+
+[FAIL]
+  Missing lookthroughs: {'lt_6'}
+
+================================================================================
+TEST 2003: exclude_simulated_cash (PreProcessing)
+================================================================================
+
+Manual calculation:
+  Filter: NOT (position_source_type_id=10 AND liquidity_type_id=5)
+  Removed positions: pos_5 (type=10 AND liq=5)
+  Kept: pos_1, pos_2, pos_3, pos_4, pos_6, pos_7, pos_8, pos_9, pos_10
+
+  Removed lookthroughs: lt_7 (type=10 AND liq=5)
+  Cascade: None
+  Kept: lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_8
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_10', 'pos_2', 'pos_3', 'pos_4', 'pos_6', 'pos_7', 'pos_8', 'pos_9']
+  Actual positions:   ['pos_1', 'pos_10', 'pos_2', 'pos_4', 'pos_6', 'pos_7', 'pos_8']
+  Match: False
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_3', 'lt_4', 'lt_5', 'lt_6', 'lt_8']
+  Actual lookthroughs:   ['lt_1', 'lt_2', 'lt_3', 'lt_5', 'lt_6', 'lt_8']
+  Match: False
+
+[FAIL]
+  Missing positions: {'pos_9', 'pos_3'}
+  Missing lookthroughs: {'lt_4'}
+
+================================================================================
+TEST 2004: exclude_class_positions (PreProcessing)
+================================================================================
+
+Manual calculation:
+  Filter: is_class_position != true
+  Removed positions: pos_6 (class=true)
+  Kept: pos_1, pos_2, pos_3, pos_4, pos_5, pos_7, pos_8, pos_9, pos_10
+
+  Removed lookthroughs: lt_6 (class=true), lt_8 (class=true)
+  Cascade: pos_6 removed -> lt_8 would be cascade-removed anyway
+  Kept: lt_1, lt_2, lt_3, lt_4, lt_5, lt_7
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_10', 'pos_2', 'pos_3', 'pos_4', 'pos_5', 'pos_7', 'pos_8', 'pos_9']
+  Actual positions:   ['pos_1', 'pos_10', 'pos_2', 'pos_3', 'pos_4', 'pos_5', 'pos_7', 'pos_8', 'pos_9']
+  Match: True
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_3', 'lt_4', 'lt_5', 'lt_7']
+  Actual lookthroughs:   ['lt_1', 'lt_2', 'lt_3', 'lt_4', 'lt_5', 'lt_7']
+  Match: True
+
+[PASS]
+
+================================================================================
+TEST 2005: Multiple PreProcessing modifiers
+================================================================================
+
+Manual calculation:
+  Filter 1: position_source_type_id != 10 (removes pos_3, pos_5, pos_9)
+  Filter 2: liquidity_type_id != 6 (removes pos_4, pos_8 from remaining)
+  Filter 3: is_class_position != true (removes pos_6 from remaining)
+  Final kept positions: pos_1, pos_2, pos_7, pos_10
+
+  Lookthrough filters:
+    Filter 1: removes lt_4, lt_7
+    Filter 2: removes lt_5
+    Filter 3: removes lt_6, lt_8
+  Cascade: pos_4 removed -> lt_5, lt_6 would cascade anyway
+  Final kept lookthroughs: lt_1, lt_2, lt_3
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_10', 'pos_2', 'pos_7']
+  Actual positions:   ['pos_1', 'pos_10', 'pos_2', 'pos_7']
+  Match: True
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_3']
+  Actual lookthroughs:   ['lt_1', 'lt_2', 'lt_3']
+  Match: True
+
+[PASS]
+
+================================================================================
+TEST 2006: include_all_trade_cash (PostProcessing OR)
+================================================================================
+
+Manual calculation:
+  Perspective rule: position_source_type_id != 10
+    Removes: pos_3, pos_5, pos_9
+    Keeps: pos_1, pos_2, pos_4, pos_6, pos_7, pos_8, pos_10
+
+  PostProcessing modifier (OR): liquidity_type_id = 6
+    Adds back: pos_9 (liq=6, even though type=10)
+  Final: pos_1, pos_2, pos_4, pos_6, pos_7, pos_8, pos_9, pos_10
+
+  Lookthroughs:
+    Rule removes: lt_4, lt_7
+    PostProcessing adds back: lt_5 (liq=6)
+  Final: lt_1, lt_2, lt_3, lt_5, lt_6, lt_8
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_10', 'pos_2', 'pos_4', 'pos_6', 'pos_7', 'pos_8', 'pos_9']
+  Actual positions:   ['pos_1', 'pos_10', 'pos_2', 'pos_4', 'pos_6', 'pos_7', 'pos_8', 'pos_9']
+  Match: True
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_3', 'lt_5', 'lt_6', 'lt_8']
+  Actual lookthroughs:   ['lt_1', 'lt_2', 'lt_3', 'lt_5', 'lt_6', 'lt_8']
+  Match: True
+
+[PASS]
+
+================================================================================
+TEST 2007: Modifier Override
+================================================================================
+
+Manual calculation:
+  Perspective rule: liquidity_type_id = 1
+    Keeps: pos_1, pos_6, pos_10
+
+  PreProcessing: exclude_simulated_trades (type != 10)
+    Already satisfied by all 3 positions
+
+  PostProcessing: include_all_trade_cash
+    OVERRIDE: exclude_simulated_trades overrides include_all_trade_cash
+    So include_all_trade_cash is NOT applied
+
+  Final: pos_1, pos_6, pos_10
+  Lookthroughs cascade from kept parents
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_10', 'pos_6']
+  Actual positions:   ['pos_1', 'pos_10', 'pos_6']
+  Match: True
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_8']
+  Actual lookthroughs:   ['lt_1', 'lt_8']
+  Match: False
+
+[FAIL]
+  Missing lookthroughs: {'lt_2'}
+
+================================================================================
+TEST 2014: Cascade Removal
+================================================================================
+
+Manual calculation:
+  Rule: instrument_id IN [101, 103, 104]
+  Kept positions: pos_1 (101), pos_3 (103), pos_4 (104)
+  Removed: pos_2, pos_5, pos_6, pos_7, pos_8, pos_9, pos_10
+
+  Cascade removal:
+    pos_1 (101) kept -> lt_1, lt_2 kept
+    pos_2 (102) REMOVED -> lt_3, lt_4 cascade-removed
+    pos_4 (104) kept -> lt_5, lt_6 kept
+    pos_6 (106) REMOVED -> lt_8 cascade-removed
+    pos_5 (105) REMOVED -> lt_7 cascade-removed
+
+  Final: lt_1, lt_2, lt_5, lt_6
+
+Running system...
+
+Comparison:
+  Expected positions: ['pos_1', 'pos_3', 'pos_4']
+  Actual positions:   ['pos_1', 'pos_3', 'pos_4']
+  Match: True
+
+  Expected lookthroughs: ['lt_1', 'lt_2', 'lt_5', 'lt_6']
+  Actual lookthroughs:   []
+  Match: False
+
+[FAIL]
+  Missing lookthroughs: {'lt_2', 'lt_1', 'lt_5', 'lt_6'}
+
+================================================================================
+FINAL SUMMARY
+================================================================================
+  exclude_simulated_trades                 PASSED
+  exclude_trade_cash                       FAILED
+  exclude_simulated_cash                   FAILED
+  exclude_class_positions                  PASSED
+  Multiple PreProcessing                   PASSED
+  PostProcessing OR logic                  PASSED
+  Modifier Override                        FAILED
+  Cascade Removal                          FAILED
+
+[ERROR] SOME TESTS FAILED
+4 out of 8 tests failed.

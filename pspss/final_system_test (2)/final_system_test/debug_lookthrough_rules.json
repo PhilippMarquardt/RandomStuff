@@ -1,0 +1,19 @@
+{
+  "perspectives": {
+    "3001": {
+      "id": 3001,
+      "name": "Test 3001: Simple scale_factor 0.5x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    }
+  },
+  "modifiers": {},
+  "default_modifiers": [],
+  "modifier_overrides": {}
+}

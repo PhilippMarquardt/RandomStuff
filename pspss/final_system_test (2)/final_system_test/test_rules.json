@@ -1,0 +1,60 @@
+{
+  "system_version_timestamp": "2025-01-16",
+  "perspectives": [
+    {
+      "id": 1001,
+      "name": "Test Scale Holdings - Filter C",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"!=\", \"value\": 103}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 1002,
+      "name": "Test Scale Lookthroughs - No Filter",
+      "is_active": true,
+      "is_supported": true,
+      "rules": []
+    },
+    {
+      "id": 1003,
+      "name": "Test Combined - Filter B and Scale Both",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"!=\", \"value\": 102}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    {
+      "id": 1004,
+      "name": "Test Filter All - Edge Case",
+      "is_active": true,
+      "is_supported": true,
+      "rules": [
+        {
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 200}",
+          "apply_to": "both"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "scale_holdings_to_100_percent": {
+      "name": "scale_holdings_to_100_percent",
+      "type": "ScalingModifier",
+      "rule": null
+    },
+    "scale_lookthroughs_to_100_percent": {
+      "name": "scale_lookthroughs_to_100_percent",
+      "type": "ScalingModifier",
+      "rule": null
+    }
+  }
+}

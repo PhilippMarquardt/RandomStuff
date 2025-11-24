@@ -1,0 +1,1207 @@
+{
+  "perspectives": {
+    "3001": {
+      "id": 3001,
+      "name": "Test 3001: Scale 0.5x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3002": {
+      "id": 3002,
+      "name": "Test 3002: Scale 0.55x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.55,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3003": {
+      "id": 3003,
+      "name": "Test 3003: Scale 0.6x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.6,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3004": {
+      "id": 3004,
+      "name": "Test 3004: Scale 0.65x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.65,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3005": {
+      "id": 3005,
+      "name": "Test 3005: Scale 0.7x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.7,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3006": {
+      "id": 3006,
+      "name": "Test 3006: Scale 0.75x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.75,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3007": {
+      "id": 3007,
+      "name": "Test 3007: Scale 0.8x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.8,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3008": {
+      "id": 3008,
+      "name": "Test 3008: Scale 0.8500000000000001x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.8500000000000001,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3009": {
+      "id": 3009,
+      "name": "Test 3009: Scale 0.9x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.9,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3010": {
+      "id": 3010,
+      "name": "Test 3010: Scale 0.95x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.95,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3011": {
+      "id": 3011,
+      "name": "Test 3011: Scale 1.0x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.0,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3012": {
+      "id": 3012,
+      "name": "Test 3012: Scale 1.05x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.05,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3013": {
+      "id": 3013,
+      "name": "Test 3013: Scale 1.1x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.1,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3014": {
+      "id": 3014,
+      "name": "Test 3014: Scale 1.15x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.15,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3015": {
+      "id": 3015,
+      "name": "Test 3015: Scale 1.2000000000000002x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.2000000000000002,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3016": {
+      "id": 3016,
+      "name": "Test 3016: Scale 1.25x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.25,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3017": {
+      "id": 3017,
+      "name": "Test 3017: Scale 1.3x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.3,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3018": {
+      "id": 3018,
+      "name": "Test 3018: Scale 1.35x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.35,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3019": {
+      "id": 3019,
+      "name": "Test 3019: Scale 1.4x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.4,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3020": {
+      "id": 3020,
+      "name": "Test 3020: Scale 1.4500000000000002x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.4500000000000002,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3021": {
+      "id": 3021,
+      "name": "Test 3021: Scale 1.5x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3022": {
+      "id": 3022,
+      "name": "Test 3022: Scale 1.55x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.55,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3023": {
+      "id": 3023,
+      "name": "Test 3023: Scale 1.6x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.6,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3024": {
+      "id": 3024,
+      "name": "Test 3024: Scale 1.6500000000000001x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.6500000000000001,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3025": {
+      "id": 3025,
+      "name": "Test 3025: Scale 1.7000000000000002x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.7000000000000002,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3026": {
+      "id": 3026,
+      "name": "Test 3026: Scale 1.75x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.75,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3027": {
+      "id": 3027,
+      "name": "Test 3027: Scale 1.8x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.8,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3028": {
+      "id": 3028,
+      "name": "Test 3028: Scale 1.85x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.85,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3029": {
+      "id": 3029,
+      "name": "Test 3029: Scale 1.9000000000000001x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.9000000000000001,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3030": {
+      "id": 3030,
+      "name": "Test 3030: Scale 1.9500000000000002x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.9500000000000002,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3031": {
+      "id": 3031,
+      "name": "Test 3031: Scale 2.0x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.0,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3032": {
+      "id": 3032,
+      "name": "Test 3032: Scale 2.05x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.05,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3033": {
+      "id": 3033,
+      "name": "Test 3033: Scale 2.1x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.1,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3034": {
+      "id": 3034,
+      "name": "Test 3034: Scale 2.1500000000000004x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.1500000000000004,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3035": {
+      "id": 3035,
+      "name": "Test 3035: Scale 2.2x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.2,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3036": {
+      "id": 3036,
+      "name": "Test 3036: Scale 2.25x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.25,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3037": {
+      "id": 3037,
+      "name": "Test 3037: Scale 2.3x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.3,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3038": {
+      "id": 3038,
+      "name": "Test 3038: Scale 2.35x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.35,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3039": {
+      "id": 3039,
+      "name": "Test 3039: Scale 2.4000000000000004x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.4000000000000004,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3040": {
+      "id": 3040,
+      "name": "Test 3040: Scale 2.45x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.45,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3041": {
+      "id": 3041,
+      "name": "Test 3041: Scale 2.5x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3042": {
+      "id": 3042,
+      "name": "Test 3042: Scale 2.5500000000000003x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.5500000000000003,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3043": {
+      "id": 3043,
+      "name": "Test 3043: Scale 2.6x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.6,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3044": {
+      "id": 3044,
+      "name": "Test 3044: Scale 2.65x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.65,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3045": {
+      "id": 3045,
+      "name": "Test 3045: Scale 2.7x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.7,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3046": {
+      "id": 3046,
+      "name": "Test 3046: Scale 2.75x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.75,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3047": {
+      "id": 3047,
+      "name": "Test 3047: Scale 2.8000000000000003x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.8000000000000003,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3048": {
+      "id": 3048,
+      "name": "Test 3048: Scale 2.85x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.85,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3049": {
+      "id": 3049,
+      "name": "Test 3049: Scale 2.9000000000000004x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.9000000000000004,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3050": {
+      "id": 3050,
+      "name": "Test 3050: Scale 2.95x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 2.95,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3051": {
+      "id": 3051,
+      "name": "Test 3051: Scale 3.0x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.0,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3052": {
+      "id": 3052,
+      "name": "Test 3052: Scale 3.0500000000000003x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.0500000000000003,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3053": {
+      "id": 3053,
+      "name": "Test 3053: Scale 3.1x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.1,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3054": {
+      "id": 3054,
+      "name": "Test 3054: Scale 3.1500000000000004x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.1500000000000004,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3055": {
+      "id": 3055,
+      "name": "Test 3055: Scale 3.2x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.2,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3056": {
+      "id": 3056,
+      "name": "Test 3056: Scale 3.25x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.25,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3057": {
+      "id": 3057,
+      "name": "Test 3057: Scale 3.3000000000000003x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.3000000000000003,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3058": {
+      "id": 3058,
+      "name": "Test 3058: Scale 3.35x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.35,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3059": {
+      "id": 3059,
+      "name": "Test 3059: Scale 3.4000000000000004x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.4000000000000004,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3060": {
+      "id": 3060,
+      "name": "Test 3060: Scale 3.45x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.45,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3061": {
+      "id": 3061,
+      "name": "Test 3061: Scale 3.5x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3062": {
+      "id": 3062,
+      "name": "Test 3062: Scale 3.5500000000000003x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.5500000000000003,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3063": {
+      "id": 3063,
+      "name": "Test 3063: Scale 3.6x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.6,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3064": {
+      "id": 3064,
+      "name": "Test 3064: Scale 3.6500000000000004x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.6500000000000004,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3065": {
+      "id": 3065,
+      "name": "Test 3065: Scale 3.7x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.7,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3066": {
+      "id": 3066,
+      "name": "Test 3066: Scale 3.75x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.75,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3067": {
+      "id": 3067,
+      "name": "Test 3067: Scale 3.8000000000000003x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.8000000000000003,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3068": {
+      "id": 3068,
+      "name": "Test 3068: Scale 3.85x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.85,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3069": {
+      "id": 3069,
+      "name": "Test 3069: Scale 3.9000000000000004x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.9000000000000004,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3070": {
+      "id": 3070,
+      "name": "Test 3070: Scale 3.95x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 3.95,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3071": {
+      "id": 3071,
+      "name": "Test 3071: Scale 4.0x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.0,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3072": {
+      "id": 3072,
+      "name": "Test 3072: Scale 4.050000000000001x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.050000000000001,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3073": {
+      "id": 3073,
+      "name": "Test 3073: Scale 4.1x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.1,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3074": {
+      "id": 3074,
+      "name": "Test 3074: Scale 4.15x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.15,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3075": {
+      "id": 3075,
+      "name": "Test 3075: Scale 4.2x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.2,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3076": {
+      "id": 3076,
+      "name": "Test 3076: Scale 4.25x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.25,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3077": {
+      "id": 3077,
+      "name": "Test 3077: Scale 4.300000000000001x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.300000000000001,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3078": {
+      "id": 3078,
+      "name": "Test 3078: Scale 4.35x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.35,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3079": {
+      "id": 3079,
+      "name": "Test 3079: Scale 4.4x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.4,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3080": {
+      "id": 3080,
+      "name": "Test 3080: Scale 4.45x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.45,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3081": {
+      "id": 3081,
+      "name": "Test 3081: Scale 4.5x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3082": {
+      "id": 3082,
+      "name": "Test 3082: Scale 4.55x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.55,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3083": {
+      "id": 3083,
+      "name": "Test 3083: Scale 4.6000000000000005x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.6000000000000005,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3084": {
+      "id": 3084,
+      "name": "Test 3084: Scale 4.65x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.65,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3085": {
+      "id": 3085,
+      "name": "Test 3085: Scale 4.7x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.7,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3086": {
+      "id": 3086,
+      "name": "Test 3086: Scale 4.75x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.75,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3087": {
+      "id": 3087,
+      "name": "Test 3087: Scale 4.8x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.8,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3088": {
+      "id": 3088,
+      "name": "Test 3088: Scale 4.8500000000000005x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.8500000000000005,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3089": {
+      "id": 3089,
+      "name": "Test 3089: Scale 4.9x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.9,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3090": {
+      "id": 3090,
+      "name": "Test 3090: Scale 4.95x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 4.95,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3091": {
+      "id": 3091,
+      "name": "Test 3091: Scale 5.0x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.0,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3092": {
+      "id": 3092,
+      "name": "Test 3092: Scale 5.05x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.05,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3093": {
+      "id": 3093,
+      "name": "Test 3093: Scale 5.1000000000000005x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.1000000000000005,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3094": {
+      "id": 3094,
+      "name": "Test 3094: Scale 5.15x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.15,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3095": {
+      "id": 3095,
+      "name": "Test 3095: Scale 5.2x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.2,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3096": {
+      "id": 3096,
+      "name": "Test 3096: Scale 5.25x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.25,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3097": {
+      "id": 3097,
+      "name": "Test 3097: Scale 5.300000000000001x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.300000000000001,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3098": {
+      "id": 3098,
+      "name": "Test 3098: Scale 5.3500000000000005x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.3500000000000005,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3099": {
+      "id": 3099,
+      "name": "Test 3099: Scale 5.4x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.4,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3100": {
+      "id": 3100,
+      "name": "Test 3100: Scale 5.45x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 5.45,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    }
+  },
+  "modifiers": {},
+  "default_modifiers": [],
+  "modifier_overrides": {}
+}

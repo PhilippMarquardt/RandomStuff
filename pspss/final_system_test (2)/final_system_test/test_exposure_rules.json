@@ -1,0 +1,73 @@
+{
+  "perspectives": {
+    "3001": {
+      "id": 3001,
+      "name": "Test 3001: Simple scale_factor 0.5x",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3002": {
+      "id": 3002,
+      "name": "Test 3002: Conditional scale_factor",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.75,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"liquidity_type_id\", \"operator_type\": \"=\", \"value\": 1}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3003": {
+      "id": 3003,
+      "name": "Test 3003: Chained scale_factors",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.8,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        },
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.25,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3004": {
+      "id": 3004,
+      "name": "Test 3004: scale_factor holdings only",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 0.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "holding"
+        }
+      ]
+    },
+    "3005": {
+      "id": 3005,
+      "name": "Test 3005: scale_factor lookthroughs only",
+      "rules": [
+        {
+          "is_scaling_rule": true,
+          "scale_factor": 1.5,
+          "criteria": "{\"required_columns\": {}, \"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 0}",
+          "apply_to": "reference"
+        }
+      ]
+    }
+  },
+  "modifiers": {},
+  "default_modifiers": [],
+  "modifier_overrides": {}
+}

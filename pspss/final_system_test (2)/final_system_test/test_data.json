@@ -1,0 +1,66 @@
+{
+  "ed": "2024-01-01",
+  "position_weight_labels": ["weight"],
+  "lookthrough_weight_labels": ["weight"],
+  "verbose_output": true,
+  "perspective_configurations": {
+    "test_1001": {
+      "1001": ["scale_holdings_to_100_percent"]
+    },
+    "test_1002": {
+      "1002": ["scale_lookthroughs_to_100_percent"]
+    },
+    "test_1003": {
+      "1003": ["scale_holdings_to_100_percent", "scale_lookthroughs_to_100_percent"]
+    },
+    "test_1004": {
+      "1004": ["scale_holdings_to_100_percent"]
+    }
+  },
+  "test_portfolio": {
+    "position_type": "holding",
+    "positions": {
+      "pos_A": {
+        "instrument_identifier": 101,
+        "instrument_id": 101,
+        "sub_portfolio_id": "sub_1",
+        "weight": 20.0
+      },
+      "pos_B": {
+        "instrument_identifier": 102,
+        "instrument_id": 102,
+        "sub_portfolio_id": "sub_1",
+        "weight": 30.0
+      },
+      "pos_C": {
+        "instrument_identifier": 103,
+        "instrument_id": 103,
+        "sub_portfolio_id": "sub_1",
+        "weight": 50.0
+      }
+    },
+    "essential_lookthroughs": {
+      "lt_A": {
+        "instrument_identifier": 201,
+        "instrument_id": 201,
+        "parent_instrument_id": 101,
+        "sub_portfolio_id": "sub_1",
+        "weight": 10.0
+      },
+      "lt_B1": {
+        "instrument_identifier": 202,
+        "instrument_id": 202,
+        "parent_instrument_id": 102,
+        "sub_portfolio_id": "sub_1",
+        "weight": 20.0
+      },
+      "lt_B2": {
+        "instrument_identifier": 203,
+        "instrument_id": 203,
+        "parent_instrument_id": 102,
+        "sub_portfolio_id": "sub_1",
+        "weight": 15.0
+      }
+    }
+  }
+}

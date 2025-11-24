@@ -1,0 +1,227 @@
+{
+  "perspectives": {
+    "3001": {
+      "id": 3001,
+      "name": "Test 3001: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3002": {
+      "id": 3002,
+      "name": "Test 3002: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3003": {
+      "id": 3003,
+      "name": "Test 3003: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3004": {
+      "id": 3004,
+      "name": "Test 3004: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3005": {
+      "id": 3005,
+      "name": "Test 3005: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3006": {
+      "id": 3006,
+      "name": "Test 3006: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3007": {
+      "id": 3007,
+      "name": "Test 3007: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3008": {
+      "id": 3008,
+      "name": "Test 3008: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3009": {
+      "id": 3009,
+      "name": "Test 3009: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3010": {
+      "id": 3010,
+      "name": "Test 3010: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3011": {
+      "id": 3011,
+      "name": "Test 3011: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3012": {
+      "id": 3012,
+      "name": "Test 3012: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3013": {
+      "id": 3013,
+      "name": "Test 3013: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3014": {
+      "id": 3014,
+      "name": "Test 3014: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3015": {
+      "id": 3015,
+      "name": "Test 3015: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3016": {
+      "id": 3016,
+      "name": "Test 3016: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3017": {
+      "id": 3017,
+      "name": "Test 3017: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3018": {
+      "id": 3018,
+      "name": "Test 3018: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3019": {
+      "id": 3019,
+      "name": "Test 3019: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    },
+    "3020": {
+      "id": 3020,
+      "name": "Test 3020: Complex Filter",
+      "rules": [
+        {
+          "is_scaling_rule": false,
+          "criteria": "{\"required_columns\": {}, \"and\": [{\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \">\", \"value\": 1000}, {\"table_name\": \"position_data\", \"column\": \"instrument_id\", \"operator_type\": \"<\", \"value\": 2000}]}",
+          "apply_to": "both"
+        }
+      ]
+    }
+  },
+  "modifiers": {},
+  "default_modifiers": [],
+  "modifier_overrides": {}
+}
