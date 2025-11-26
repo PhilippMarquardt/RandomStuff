@@ -194,7 +194,8 @@ class RuleEvaluator:
         
         if operator in ["In", "NotIn"]:
             if isinstance(value, str):
-                items = [item.strip() for item in value.strip("[]").split(",")]
+                # Strip both brackets [] and parentheses () to handle formats like "(4,8,9)" or "[4,8,9]"
+                items = [item.strip() for item in value.strip("[]()").split(",")]
                 return [int(x) if x.lstrip('-').isdigit() else x for x in items]
             return value if isinstance(value, list) else [value]
         
