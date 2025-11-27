@@ -1,0 +1,120 @@
+def _apply_perspective_rules(self, rules, weight_labels: list, perspective_id: int, rule_application_data: dict = None, are_filtering_rules: bool = True, post_processing_modifiers: dict = None, lookthrough_name: str = None, scale_holdings_to_100_percent = None, rescale_lookthroughs_to_100_percent_modifier = None):
+        """ Applies the rules for the perspective for the given "position type" ie. holding / reference """
+
+        metric_dict = {}
+        scaling_result_label = 'scaling_result'
+
+        try:
+            if not isinstance(rules, list):
+                rules = [rules]
+
+            # CHANGE 1: Create an iterable that contains at least [None] if rules are empty
+            # This ensures the loop runs exactly once to trigger modifiers even if no rules exist
+            rules_to_iterate = rules if rules else [None]
+
+            for rule in rules_to_iterate:
+                
+                # CHANGE 2: Handle the "Real Rule" vs "Empty Rule" logic
+                if rule:
+                    # --- NORMAL LOGIC (Existing Code) ---
+                    # Only apply the rule if required
+                    if rule.apply_to.lower() != 'both' and rule.apply_to.lower() != self._position_data_type:
+                        continue
+
+                    with trace.get_tracer(__name__).start_as_current_span('applying rules to {0}{1}'.format(self._container_name, '' if not lookthrough_name else f'({lookthrough_name})')):
+                        rule_results = self._evaluate_rule_results(rule, rule_application_data, weight_labels, perspective_id, 'result' if are_filtering_rules else scaling_result_label)
+                else:
+                    # --- EMPTY RULE LOGIC (New Code) ---
+                    # There are no rules, but we need a "Baseline" result of TRUE so modifiers can run against it.
+                    # We create a dataframe containing all identifiers set to True.
+                    rule_results = rule_application_data['position_data'][['identifier']].copy()
+                    rule_results['result'] = True
+                    rule_results['rule_application_results'] = 'No Rule Applied (Base Pass)'
+                    if not are_filtering_rules:
+                        rule_results[scaling_result_label] = True
+
+                # --- FROM HERE DOWN IS 100% IDENTICAL TO YOUR ORIGINAL CODE ---
+
+                # Now we have applied a specific rule, apply any post-processing modifiers such as TradeCashTreatment etc..
+                if post_processing_modifiers:
+                    # Merge the rule results data with the position_data so we have everything we need for the post processing rules
+                    # We deliberately do not pass weight_labels as we don't want it to change the weights at this point
+                    rule_application_data['rule_result'] = self._merge_results_with_positions(rule_application_data['position_data'], rule_results)
+
+                    with trace.get_tracer(__name__).start_as_current_span('applying post processing modifiers to {0}{1}'.format(self._container_name, '' if not lookthrough_name else f'({lookthrough_name})')):
+                        for post_processing_modifier in post_processing_modifiers:
+                            with trace.get_tracer(__name__).start_as_current_span('applying post processing modifier {0} to {1}{2}'.format(post_processing_modifier.name, self._container_name, '' if not lookthrough_name else f'.({lookthrough_name})')):
+                                post_processing_modifier_results = self._evaluate_rule_results(post_processing_modifier.rule, rule_application_data, weight_labels, perspective_id, 'result')
+
+                                rule_results = self._stringify_results([rule_results, post_processing_modifier_results], post_processing_modifier.rule_result_operator, 'result')
+
+                if are_filtering_rules:
+                    if not lookthrough_name:
+                        if self._lookthroughs:
+                            # Remove lookthroughs for those that failed the rule
+                            positions_which_failed_the_rules = rule_results['identifier'][rule_results['result'] == False].values.tolist()
+                            if positions_which_failed_the_rules:
+                                # See https://tfs.prod.zkb.ch/tfs/ZKBcore/CORE_ZKB/_boards/board/t/CORE%20Team/Stories/?workitem=49687
+                                # Get not only parent id but also the subportfolio id
+                                # For the next person: The identifier is a unique number per position
+                                parent_iids_and_subpid_for_lookthroughs_to_remove = self._positions[['instrument_id', 'sub_portfolio_id']][self._positions['identifier'].isin(positions_which_failed_the_rules)].values.tolist()
+
+                                with trace.get_tracer(__name__).start_as_current_span(f'removing lookthrough positions for {self._container_name}'):
+                                    for lookthrough in [lt for lt in self._lookthroughs if self._lookthroughs[lt] is not None and not self._lookthroughs[lt].empty]:
+                                        with trace.get_tracer(__name__).start_as_current_span('removing lookthrough positions for {0}{1}'.format(self._container_name, '' if not lookthrough_name else f'.{lookthrough_name}')):
+                                            # See https://tfs.prod.zkb.ch/tfs/ZKBcore/CORE_ZKB/_boards/board/t/CORE%20Team/Stories/?workitem=49687
+                                            # We always find correct lt by using parent AND subpf id
+                                            lookthrough_identifiers_to_remove = self._lookthroughs[lookthrough]['identifier'][
+                                                self._lookthroughs[lookthrough][['parent_instrument_id', 'sub_portfolio_id']].apply(tuple, axis=1).isin(set(map(tuple, parent_iids_and_subpid_for_lookthroughs_to_remove)))
+                                            ].values.tolist()
+
+                                            if lookthrough_identifiers_to_remove:
+                                                self._handle_removed_positions(lookthrough_identifiers_to_remove, 'removed because parent positions failed rule', 'identifier', lookthrough)
+
+                        # Join the results with the positions and set the weight
+                        self._position_data = self._merge_results_with_positions(self._position_data, rule_results, self.position_weight_labels)
+
+                        if scale_holdings_to_100_percent:
+                            self.rescale_positions_to_100_percent()
+                    else:
+                        if self._lookthroughs[lookthrough_name] is None or self._lookthroughs[lookthrough_name].empty:
+                            continue
+
+                        lookthrough_identifiers_to_remove = rule_results['identifier'][rule_results['result'] == False].values.tolist()
+
+                        if lookthrough_identifiers_to_remove:
+                            self._handle_removed_positions(lookthrough_identifiers_to_remove, 'failed the rule', 'identifier', lookthrough_name)
+
+                        if self._lookthroughs[lookthrough_name] is None or self._lookthroughs[lookthrough_name].empty:
+                            continue
+
+                        # Join the lookthrough with the results and set the weight
+                        self._lookthroughs[lookthrough_name] = self._merge_results_with_positions(self._lookthroughs[lookthrough_name], rule_results, self.lookthrough_weight_labels, None, True)
+
+                        # Do we need to rescale the lookthroughs?
+                        if rule_results['identifier'][rule_results['result'] == False].shape[0] > 0:
+                            if self._lookthroughs[lookthrough_name] is not None and not self._lookthroughs[lookthrough_name].empty and rescale_lookthroughs_to_100_percent_modifier:
+                                metric_name = f'rescaling \'{0}\' lookthrough \'{1}\' to 100%'
+
+                                with trace.get_tracer(__name__).start_as_current_span(metric_name):
+                                    start_time = perf_counter()
+
+                                    data_sets_for_lookthrough_scaling_rule = {table: rule_application_data[table] for table in rule_application_data.keys() if table in rescale_lookthroughs_to_100_percent_modifier.rule.required_columns}
+                                    
+                                    self.rescale_lookthroughs_to_100_percent(lookthrough_name, data_sets_for_lookthrough_scaling_rule, rescale_lookthroughs_to_100_percent_modifier.rule.criteria, perspective_id)
+
+                                    self._add_metric_entry(metric_name, start_time, perf_counter())
+
+                # CHANGE 3: Check if rule exists before checking rule properties
+                # Don't rescale if its not a scaling rule (or if it's the Dummy empty rule)
+                if not rule or not rule.exposure_factor:
+                    continue
+
+                # Apply the scaling for the rule if it was successful
+                if not lookthrough_name:
+                    with trace.get_tracer(__name__).start_as_current_span(f'applying scale factors for {self._container_name}'):
+                        self._position_data = self._apply_exposure_factor_to_positions(rule_results, self._position_data, scaling_result_label, rule.exposure_factor, weight_labels)
+
+            return metric_dict
+        except Exception as ex:
+            raise ex
