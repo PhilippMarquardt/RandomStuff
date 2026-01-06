@@ -106,13 +106,15 @@ def main(request_path: str):
     log.info(f"  Top-level keys: {list(request.keys())}")
 
     # Extract key config
-    ed = request.get('ed', 'N/A')
+    ed = request.get('ed')  # None if not provided - takes latest
+    system_version_timestamp = request.get('system_version_timestamp')
     position_weights = request.get('position_weight_labels', ['weight'])
     lookthrough_weights = request.get('lookthrough_weight_labels', ['weight'])
     perspective_configs = request.get('perspective_configurations', {})
     verbose_output = request.get('verbose_output', True)
 
-    log.info(f"  Effective date: {ed}")
+    log.info(f"  Effective date: {ed or '(latest)'}")
+    log.info(f"  System version timestamp: {system_version_timestamp or '(current)'}")
     log.info(f"  Position weights: {position_weights}")
     log.info(f"  Lookthrough weights: {lookthrough_weights}")
     log.info(f"  Perspective configurations: {len(perspective_configs)}")
@@ -167,7 +169,9 @@ def main(request_path: str):
     }
 
     try:
-        reference_data = ref_loader.load_multiple_tables(unique_ids, required_tables, ed)
+        reference_data = ref_loader.load_multiple_tables(
+            unique_ids, required_tables, ed, system_version_timestamp
+        )
         for table_name, df in reference_data.items():
             log.info(f"  Loaded {table_name}: {len(df)} rows")
 
