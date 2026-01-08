@@ -186,8 +186,12 @@ class DataIngestion:
 
         unique_ids = pl.concat([pos_ids, lt_ids]).unique().collect().to_series().to_list()
 
-        # Get unique parent_instrument_ids for PARENT_INSTRUMENT lookup
-        parent_ids = positions_lf.select('parent_instrument_id').unique().collect().to_series().to_list()
+        # Get unique parent_instrument_ids for PARENT_INSTRUMENT lookup (only if column exists)
+        pos_columns = positions_lf.collect_schema().names()
+        if 'parent_instrument_id' in pos_columns:
+            parent_ids = positions_lf.select('parent_instrument_id').unique().collect().to_series().to_list()
+        else:
+            parent_ids = []
 
         # Ensure required base columns are included
         tables_to_load = dict(required_tables)
@@ -218,20 +222,21 @@ class DataIngestion:
             ref_lf = ref_df.lazy()
 
             if table_name == 'PARENT_INSTRUMENT':
-                # Join on parent_instrument_id
-                positions_lf = positions_lf.join(
-                    ref_lf,
-                    left_on='parent_instrument_id',
-                    right_on='parent_instrument_id',
-                    how='left'
-                )
-                if lookthroughs_lf.collect_schema().names():
-                    lookthroughs_lf = lookthroughs_lf.join(
+                # Join on parent_instrument_id (only if column exists)
+                if 'parent_instrument_id' in positions_lf.collect_schema().names():
+                    positions_lf = positions_lf.join(
                         ref_lf,
                         left_on='parent_instrument_id',
                         right_on='parent_instrument_id',
                         how='left'
                     )
+                    if lookthroughs_lf.collect_schema().names() and 'parent_instrument_id' in lookthroughs_lf.collect_schema().names():
+                        lookthroughs_lf = lookthroughs_lf.join(
+                            ref_lf,
+                            left_on='parent_instrument_id',
+                            right_on='parent_instrument_id',
+                            how='left'
+                        )
             else:
                 # Join on instrument_id
                 positions_lf = positions_lf.join(ref_lf, on='instrument_id', how='left')
