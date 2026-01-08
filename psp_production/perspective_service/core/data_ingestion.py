@@ -193,16 +193,12 @@ class DataIngestion:
         else:
             parent_ids = []
 
-        # Ensure required base columns are included
+        # Only load tables that are actually required (no hardcoded defaults)
         tables_to_load = dict(required_tables)
-        base_columns = ['liquidity_type_id', 'position_source_type_id']
 
-        if 'INSTRUMENT_CATEGORIZATION' not in tables_to_load:
-            tables_to_load['INSTRUMENT_CATEGORIZATION'] = base_columns
-        else:
-            tables_to_load['INSTRUMENT_CATEGORIZATION'] = list(
-                set(tables_to_load['INSTRUMENT_CATEGORIZATION'] + base_columns)
-            )
+        # Skip if no tables to load
+        if not tables_to_load:
+            return positions_lf, lookthroughs_lf
 
         # Load reference data
         ref_data = reference_loader.load(

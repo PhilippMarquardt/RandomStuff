@@ -50,7 +50,8 @@ class PerspectiveEngine:
                 perspective_configs: Dict[str, Dict[str, List[str]]],
                 position_weights: List[str],
                 lookthrough_weights: List[str],
-                verbose: bool = False) -> Dict:
+                verbose: bool = False,
+                flatten_response: bool = False) -> Dict:
         """
         Process input data through perspective rules.
 
@@ -60,6 +61,7 @@ class PerspectiveEngine:
             position_weights: List of weight column names for positions
             lookthrough_weights: List of weight column names for lookthroughs
             verbose: Whether to include removal summary in output
+            flatten_response: Whether to flatten output to columnar format
 
         Returns:
             Formatted output dictionary
@@ -115,7 +117,8 @@ class PerspectiveEngine:
             metadata_map,
             position_weights,
             lookthrough_weights,
-            verbose
+            verbose,
+            flatten_response
         )
 
     def _determine_required_tables(self,

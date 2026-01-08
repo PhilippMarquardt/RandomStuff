@@ -16,7 +16,8 @@ class OutputFormatter:
                       metadata_map: Dict,
                       position_weights: List[str],
                       lookthrough_weights: List[str],
-                      verbose: bool) -> Dict:
+                      verbose: bool,
+                      flatten_response: bool = False) -> Dict:
         """Format processed dataframes into structured output."""
         if not metadata_map:
             return {"perspective_configurations": {}}
@@ -71,6 +72,10 @@ class OutputFormatter:
                 position_weights,
                 results
             )
+
+        # Flatten response if requested (converts row-based to columnar format)
+        if flatten_response:
+            OutputFormatter._flatten_results(results)
 
         return {"perspective_configurations": results}
 
@@ -413,8 +418,8 @@ class OutputFormatter:
                 if removed.is_empty():
                     continue
 
-                # Group by container and sum weights
-                agg_exprs = [pl.col(w).sum().alias(w) for w in valid_weights]
+                # Group by container and multiply weights (original uses multiplication, not sum)
+                agg_exprs = [pl.col(w).product().alias(w) for w in valid_weights]
                 aggregated = removed.group_by("container").agg(agg_exprs)
 
                 # Add scale_factors per container
@@ -428,3 +433,60 @@ class OutputFormatter:
                         if container not in perspective_target:
                             perspective_target[container] = {}
                         perspective_target[container]["scale_factors"] = scale_factors
+
+    @staticmethod
+    def _flatten_results(results: Dict) -> None:
+        """
+        Flatten positions and lookthroughs from row-based to columnar format.
+
+        Converts from:
+            {"positions": {"123": {"weight": 0.5}, "456": {"weight": 0.2}}}
+        To:
+            {"positions": {"identifier": [123, 456], "weight": [0.5, 0.2]}}
+        """
+        for config_name, perspectives in results.items():
+            for perspective_id, containers in perspectives.items():
+                for container_name, container_data in containers.items():
+                    # Flatten positions
+                    if "positions" in container_data:
+                        container_data["positions"] = OutputFormatter._flatten_entries(
+                            container_data["positions"]
+                        )
+
+                    # Flatten all lookthrough types
+                    for key in list(container_data.keys()):
+                        if "lookthrough" in key:
+                            container_data[key] = OutputFormatter._flatten_entries(
+                                container_data[key]
+                            )
+
+    @staticmethod
+    def _flatten_entries(entries: Dict) -> Dict:
+        """
+        Convert row-based dict to columnar format.
+
+        Input:  {"123": {"weight": 0.5, "exposure": 0.3}, "456": {"weight": 0.2, "exposure": 0.1}}
+        Output: {"identifier": [123, 456], "weight": [0.5, 0.2], "exposure": [0.3, 0.1]}
+        """
+        if not entries:
+            return {"identifier": []}
+
+        processed = {"identifier": []}
+
+        for entry_id, entry_data in entries.items():
+            # Try to convert identifier to int, otherwise keep as string
+            try:
+                processed["identifier"].append(int(entry_id))
+            except (ValueError, TypeError):
+                processed["identifier"].append(entry_id)
+
+            # Add each property value to its column
+            for key, value in entry_data.items():
+                if key not in processed:
+                    processed[key] = []
+                # Round floats to 13 decimal places (matching original)
+                if isinstance(value, float):
+                    value = round(value, 13)
+                processed[key].append(value)
+
+        return processed

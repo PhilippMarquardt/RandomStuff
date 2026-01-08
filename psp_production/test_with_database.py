@@ -14,6 +14,7 @@ import sys
 import io
 import json
 import argparse
+from time import perf_counter
 
 import pyodbc
 
@@ -51,21 +52,30 @@ def main():
     parser = argparse.ArgumentParser(description='Test perspective service with JSON input')
     parser.add_argument('input_file', help='Path to input JSON file')
     parser.add_argument('--verbose', '-v', action='store_true', help='Include removal summary in output')
+    parser.add_argument('--flatten', '-f', action='store_true', help='Flatten output to columnar format')
     args = parser.parse_args()
+
+    # Track timing for each step
+    timings = {}
+    total_start = perf_counter()
 
     # =========================================================================
     # STEP 1: Load Config
     # =========================================================================
+    step_start = perf_counter()
     print("=" * 80)
     print("STEP 1: Loading Config")
     print("=" * 80)
 
     config = load_config()
     print(f"  Config loaded from .env")
+    timings["1. Load Config"] = perf_counter() - step_start
+    print(f"  Time: {timings['1. Load Config']*1000:.2f}ms")
 
     # =========================================================================
     # STEP 2: Load Input JSON
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 2: Loading Input JSON")
     print("=" * 80)
@@ -125,18 +135,25 @@ def main():
             else:
                 print(f"      '{key}' is type: {type(value).__name__}")
 
+    timings["2. Load Input JSON"] = perf_counter() - step_start
+    print(f"\n  Time: {timings['2. Load Input JSON']*1000:.2f}ms")
+
     # =========================================================================
     # STEP 3: Connect to Database
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 3: Connecting to Database")
     print("=" * 80)
 
     db_connection = get_db_connection(config)
+    timings["3. Connect to Database"] = perf_counter() - step_start
+    print(f"  Time: {timings['3. Connect to Database']*1000:.2f}ms")
 
     # =========================================================================
     # STEP 4: Initialize Engine
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 4: Initializing Engine")
     print("=" * 80)
@@ -150,6 +167,8 @@ def main():
     print(f"  Loaded {len(engine.config.perspectives)} perspectives from DB")
     print(f"  Loaded {len(engine.config.modifiers)} modifiers")
     print(f"  Default modifiers: {engine.config.default_modifiers}")
+    timings["4. Initialize Engine"] = perf_counter() - step_start
+    print(f"  Time: {timings['4. Initialize Engine']*1000:.2f}ms")
 
     # DEBUG: Check if requested perspectives exist in DB
     print(f"\n  DEBUG: Checking requested perspectives:")
@@ -165,6 +184,7 @@ def main():
     # =========================================================================
     # STEP 5: Show Perspective Details
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 5: Perspective Configuration Details")
     print("=" * 80)
@@ -179,10 +199,13 @@ def main():
                 print(f"      Rule {i}: apply_to={rule.apply_to}, scaling={rule.is_scaling_rule}")
             if len(rules) > 3:
                 print(f"      ... and {len(rules) - 3} more rules")
+    timings["5. Show Perspective Details"] = perf_counter() - step_start
+    print(f"\n  Time: {timings['5. Show Perspective Details']*1000:.2f}ms")
 
     # =========================================================================
     # STEP 6: Check Custom Perspectives
     # =========================================================================
+    step_start = perf_counter()
     if 'custom_perspective_rules' in input_json:
         print("\n" + "=" * 80)
         print("STEP 6: Custom Perspective Rules")
@@ -192,10 +215,13 @@ def main():
             print(f"  Custom Perspective {pid}: {data.get('name', 'unnamed')}")
             rules = data.get('rules', [])
             print(f"    Rules: {len(rules)}")
+        timings["6. Check Custom Perspectives"] = perf_counter() - step_start
+        print(f"\n  Time: {timings['6. Check Custom Perspectives']*1000:.2f}ms")
 
     # =========================================================================
     # STEP 7: Process
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 7: Processing")
     print("=" * 80)
@@ -212,11 +238,14 @@ def main():
             perspective_configs=perspective_configs,
             position_weights=position_weights,
             lookthrough_weights=lookthrough_weights,
-            verbose=args.verbose
+            verbose=args.verbose,
+            flatten_response=args.flatten
         )
+        timings["7. Process"] = perf_counter() - step_start
         print("  Processing complete!")
         print(f"  Result type: {type(result)}")
         print(f"  Result keys: {list(result.keys()) if isinstance(result, dict) else 'N/A'}")
+        print(f"  Time: {timings['7. Process']*1000:.2f}ms")
     except Exception as e:
         print(f"  ERROR during processing: {type(e).__name__}: {e}")
         import traceback
@@ -226,6 +255,7 @@ def main():
     # =========================================================================
     # STEP 8: Output Summary
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 8: Output Summary")
     print("=" * 80)
@@ -258,18 +288,25 @@ def main():
                 if removed:
                     print(f"        Removed summary keys: {list(removed.keys())}")
 
+    timings["8. Output Summary"] = perf_counter() - step_start
+    print(f"\n  Time: {timings['8. Output Summary']*1000:.2f}ms")
+
     # =========================================================================
     # STEP 9: Full Output
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 9: Full Output JSON")
     print("=" * 80)
 
     print(json.dumps(result, indent=2, default=str))
+    timings["9. Full Output"] = perf_counter() - step_start
+    print(f"\n  Time: {timings['9. Full Output']*1000:.2f}ms")
 
     # =========================================================================
     # STEP 10: Cleanup
     # =========================================================================
+    step_start = perf_counter()
     print("\n" + "=" * 80)
     print("STEP 10: Cleanup")
     print("=" * 80)
@@ -277,8 +314,20 @@ def main():
     if db_connection:
         db_connection.close()
         print("  Database connection closed")
+    timings["10. Cleanup"] = perf_counter() - step_start
+    print(f"  Time: {timings['10. Cleanup']*1000:.2f}ms")
 
+    # =========================================================================
+    # TIMING SUMMARY
+    # =========================================================================
+    total_time = perf_counter() - total_start
     print("\n" + "=" * 80)
+    print("TIMING SUMMARY")
+    print("=" * 80)
+    for step_name, step_time in timings.items():
+        print(f"  {step_name}: {step_time*1000:.2f}ms")
+    print(f"\n  TOTAL: {total_time*1000:.2f}ms ({total_time:.3f}s)")
+    print("=" * 80)
     print("DONE")
     print("=" * 80)
 
