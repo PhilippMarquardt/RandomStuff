@@ -76,23 +76,54 @@ def main():
     print(f"  Loaded: {args.input_file}")
     print(f"  Top-level keys: {list(request.keys())}")
 
-    # Extract request components
-    input_json = request.get('input_json', request)
-    perspective_configs = request.get('perspective_configs', {})
-    position_weights = request.get('position_weights', ['weight'])
-    lookthrough_weights = request.get('lookthrough_weights', ['weight'])
+    # Extract request components (matching actual request format)
+    perspective_configs = request.get('perspective_configurations', {})
+    position_weights = request.get('position_weight_labels', ['weight'])
+    lookthrough_weights = request.get('lookthrough_weight_labels', ['weight'])
     system_version_timestamp = request.get('system_version_timestamp')
+    effective_date = request.get('ed')
 
-    print(f"  Perspective configs: {list(perspective_configs.keys())}")
+    # The input_json is the request itself (containers are at root level)
+    input_json = request
+
+    print(f"  Effective date: {effective_date}")
+    print(f"  System version timestamp: {system_version_timestamp}")
     print(f"  Position weights: {position_weights}")
     print(f"  Lookthrough weights: {lookthrough_weights}")
 
+    # DEBUG: Print full perspective_configs
+    print(f"\n  DEBUG perspective_configs:")
+    print(f"    Raw value: {perspective_configs}")
+    print(f"    Keys: {list(perspective_configs.keys())}")
+    for config_name, pmap in perspective_configs.items():
+        print(f"    Config '{config_name}':")
+        for pid, mods in pmap.items():
+            print(f"      Perspective {pid} (type: {type(pid).__name__}): modifiers={mods}")
+
     # Count containers and positions
+    print(f"\n  Containers found:")
+    containers_found = []
     for key, value in input_json.items():
         if isinstance(value, dict) and 'position_type' in value:
+            containers_found.append(key)
             pos_count = len(value.get('positions', {}))
-            lt_count = sum(len(v) for k, v in value.items() if 'lookthrough' in k and isinstance(v, dict))
-            print(f"  Container '{key}': {pos_count} positions, {lt_count} lookthroughs")
+            lt_keys = [k for k in value.keys() if 'lookthrough' in k]
+            lt_count = sum(len(value.get(k, {})) for k in lt_keys)
+            print(f"    Container '{key}': {pos_count} positions, {lt_count} lookthroughs, lt_keys={lt_keys}")
+            # Show first position
+            positions = value.get('positions', {})
+            if positions:
+                first_key = list(positions.keys())[0]
+                print(f"      First position '{first_key}': {list(positions[first_key].keys())}")
+
+    if not containers_found:
+        print(f"    WARNING: No containers found! Looking for dicts with 'position_type' key")
+        print(f"    All top-level keys in input_json: {list(input_json.keys())}")
+        for key, value in input_json.items():
+            if isinstance(value, dict):
+                print(f"      '{key}' is a dict with keys: {list(value.keys())[:10]}...")
+            else:
+                print(f"      '{key}' is type: {type(value).__name__}")
 
     # =========================================================================
     # STEP 3: Connect to Database
@@ -119,6 +150,17 @@ def main():
     print(f"  Loaded {len(engine.config.perspectives)} perspectives from DB")
     print(f"  Loaded {len(engine.config.modifiers)} modifiers")
     print(f"  Default modifiers: {engine.config.default_modifiers}")
+
+    # DEBUG: Check if requested perspectives exist in DB
+    print(f"\n  DEBUG: Checking requested perspectives:")
+    for config_name, perspective_map in perspective_configs.items():
+        for pid_str, modifiers in perspective_map.items():
+            pid_int = int(pid_str)
+            if pid_int in engine.config.perspectives:
+                rules = engine.config.perspectives[pid_int]
+                print(f"    Perspective {pid_int}: FOUND ({len(rules)} rules)")
+            else:
+                print(f"    Perspective {pid_int}: NOT FOUND in DB!")
 
     # =========================================================================
     # STEP 5: Show Perspective Details
@@ -159,16 +201,27 @@ def main():
     print("=" * 80)
 
     print("  Calling engine.process()...")
+    print(f"    input_json keys: {list(input_json.keys())}")
+    print(f"    perspective_configs: {perspective_configs}")
+    print(f"    position_weights: {position_weights}")
+    print(f"    lookthrough_weights: {lookthrough_weights}")
 
-    result = engine.process(
-        input_json=input_json,
-        perspective_configs=perspective_configs,
-        position_weights=position_weights,
-        lookthrough_weights=lookthrough_weights,
-        verbose=args.verbose
-    )
-
-    print("  Processing complete!")
+    try:
+        result = engine.process(
+            input_json=input_json,
+            perspective_configs=perspective_configs,
+            position_weights=position_weights,
+            lookthrough_weights=lookthrough_weights,
+            verbose=args.verbose
+        )
+        print("  Processing complete!")
+        print(f"  Result type: {type(result)}")
+        print(f"  Result keys: {list(result.keys()) if isinstance(result, dict) else 'N/A'}")
+    except Exception as e:
+        print(f"  ERROR during processing: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        return
 
     # =========================================================================
     # STEP 8: Output Summary
@@ -179,6 +232,11 @@ def main():
 
     configs = result.get('perspective_configurations', {})
     print(f"  Output configs: {list(configs.keys())}")
+    print(f"  DEBUG: Full result structure: {json.dumps({k: type(v).__name__ for k, v in result.items()}, indent=4)}")
+
+    if not configs:
+        print("  WARNING: perspective_configurations is empty!")
+        print(f"  Full result: {json.dumps(result, indent=2, default=str)}")
 
     for config_name, perspectives in configs.items():
         print(f"\n  Config: {config_name}")
