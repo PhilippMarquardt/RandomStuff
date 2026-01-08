@@ -414,27 +414,11 @@ class OutputFormatter:
                 if col_name not in positions_df.columns:
                     continue
 
-                # Find containers that have at least one removed position
-                containers_with_removals = (
-                    positions_df
-                    .filter(pl.col(col_name).is_null())
-                    .select("container")
-                    .unique()
-                    .to_series()
-                    .to_list()
-                )
-
-                if not containers_with_removals:
-                    continue
-
-                # Filter to KEPT positions (factor is NOT null) in containers with removals
-                kept = positions_df.filter(
-                    (pl.col(col_name).is_not_null()) &
-                    (pl.col("container").is_in(containers_with_removals))
-                )
+                # Filter to KEPT positions (factor is NOT null) for ALL containers
+                # Original code calculates scale_factors for all containers, not just those with removals
+                kept = positions_df.filter(pl.col(col_name).is_not_null())
 
                 if kept.is_empty():
-                    # All positions were removed in these containers
                     continue
 
                 # Group by container and SUM weights of KEPT positions
