@@ -6,13 +6,16 @@ Usage:
 
 Example:
     python test_with_database.py request.json --verbose
+
+Requires .env file with database configuration (see config.py).
 """
 
 import sys
 import io
 import json
 import argparse
-from pprint import pprint
+
+import pyodbc
 
 # Fix Windows console encoding
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
@@ -20,21 +23,51 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='repla
 # Add current directory to path
 sys.path.insert(0, '.')
 
+from config import load_config, DatabaseConfig
 from perspective_service.core.engine import PerspectiveEngine
 
 
+def get_db_connection(config: DatabaseConfig):
+    """Create database connection from config."""
+    print(f"  DB Server: {config.server}")
+    print(f"  DB Database: {config.database}")
+    print(f"  DB Driver: {config.driver}")
+    print(f"  Trusted Connection: {config.trusted_connection}")
+
+    if config.trusted_connection:
+        conn_string = f"DRIVER={{{config.driver}}};SERVER={config.server};DATABASE={config.database};Trusted_Connection=yes;"
+    else:
+        conn_string = f"DRIVER={{{config.driver}}};SERVER={config.server};DATABASE={config.database};UID={config.username};PWD={config.password};"
+
+    print(f"  Connecting...")
+    connection = pyodbc.connect(conn_string)
+    print(f"  Connected!")
+
+    return connection
+
+
 def main():
+    # Parse args first
     parser = argparse.ArgumentParser(description='Test perspective service with JSON input')
     parser.add_argument('input_file', help='Path to input JSON file')
     parser.add_argument('--verbose', '-v', action='store_true', help='Include removal summary in output')
-    parser.add_argument('--db-connection-string', '-c', default=None, help='Database connection string')
     args = parser.parse_args()
 
     # =========================================================================
-    # STEP 1: Load Input JSON
+    # STEP 1: Load Config
     # =========================================================================
     print("=" * 80)
-    print("STEP 1: Loading Input JSON")
+    print("STEP 1: Loading Config")
+    print("=" * 80)
+
+    config = load_config()
+    print(f"  Config loaded from .env")
+
+    # =========================================================================
+    # STEP 2: Load Input JSON
+    # =========================================================================
+    print("\n" + "=" * 80)
+    print("STEP 2: Loading Input JSON")
     print("=" * 80)
 
     with open(args.input_file, 'r') as f:
@@ -55,26 +88,27 @@ def main():
     print(f"  Lookthrough weights: {lookthrough_weights}")
 
     # Count containers and positions
-    containers = []
     for key, value in input_json.items():
         if isinstance(value, dict) and 'position_type' in value:
-            containers.append(key)
             pos_count = len(value.get('positions', {}))
             lt_count = sum(len(v) for k, v in value.items() if 'lookthrough' in k and isinstance(v, dict))
             print(f"  Container '{key}': {pos_count} positions, {lt_count} lookthroughs")
 
     # =========================================================================
-    # STEP 2: Initialize Engine
+    # STEP 3: Connect to Database
     # =========================================================================
     print("\n" + "=" * 80)
-    print("STEP 2: Initializing Engine")
+    print("STEP 3: Connecting to Database")
     print("=" * 80)
 
-    # TODO: Replace with your actual DB connection
-    db_connection = None  # Your DB connection here
-    if args.db_connection_string:
-        print(f"  Connection string provided: {args.db_connection_string[:20]}...")
-        # db_connection = create_connection(args.db_connection_string)
+    db_connection = get_db_connection(config)
+
+    # =========================================================================
+    # STEP 4: Initialize Engine
+    # =========================================================================
+    print("\n" + "=" * 80)
+    print("STEP 4: Initializing Engine")
+    print("=" * 80)
 
     engine = PerspectiveEngine(
         db_connection=db_connection,
@@ -87,10 +121,10 @@ def main():
     print(f"  Default modifiers: {engine.config.default_modifiers}")
 
     # =========================================================================
-    # STEP 3: Show Perspective Details
+    # STEP 5: Show Perspective Details
     # =========================================================================
     print("\n" + "=" * 80)
-    print("STEP 3: Perspective Configuration Details")
+    print("STEP 5: Perspective Configuration Details")
     print("=" * 80)
 
     for config_name, perspective_map in perspective_configs.items():
@@ -99,31 +133,29 @@ def main():
             pid_int = int(pid)
             rules = engine.config.perspectives.get(pid_int, [])
             print(f"    Perspective {pid}: {len(rules)} rules, modifiers: {modifiers or 'none'}")
-            for i, rule in enumerate(rules[:3]):  # Show first 3 rules
+            for i, rule in enumerate(rules[:3]):
                 print(f"      Rule {i}: apply_to={rule.apply_to}, scaling={rule.is_scaling_rule}")
             if len(rules) > 3:
                 print(f"      ... and {len(rules) - 3} more rules")
 
     # =========================================================================
-    # STEP 4: Check Custom Perspectives
+    # STEP 6: Check Custom Perspectives
     # =========================================================================
     if 'custom_perspective_rules' in input_json:
         print("\n" + "=" * 80)
-        print("STEP 4: Custom Perspective Rules")
+        print("STEP 6: Custom Perspective Rules")
         print("=" * 80)
 
         for pid, data in input_json['custom_perspective_rules'].items():
             print(f"  Custom Perspective {pid}: {data.get('name', 'unnamed')}")
             rules = data.get('rules', [])
             print(f"    Rules: {len(rules)}")
-            for i, rule in enumerate(rules):
-                print(f"      Rule {i}: apply_to={rule.get('apply_to')}, criteria={rule.get('criteria', {}).get('column', 'complex')}")
 
     # =========================================================================
-    # STEP 5: Process
+    # STEP 7: Process
     # =========================================================================
     print("\n" + "=" * 80)
-    print("STEP 5: Processing")
+    print("STEP 7: Processing")
     print("=" * 80)
 
     print("  Calling engine.process()...")
@@ -139,10 +171,10 @@ def main():
     print("  Processing complete!")
 
     # =========================================================================
-    # STEP 6: Output Summary
+    # STEP 8: Output Summary
     # =========================================================================
     print("\n" + "=" * 80)
-    print("STEP 6: Output Summary")
+    print("STEP 8: Output Summary")
     print("=" * 80)
 
     configs = result.get('perspective_configurations', {})
@@ -157,7 +189,6 @@ def main():
                 scale_factors = data.get('scale_factors', {})
                 removed = data.get('removed_positions_weight_summary', {})
 
-                # Count lookthroughs
                 lt_keys = [k for k in data.keys() if 'lookthrough' in k]
                 lt_count = sum(len(data.get(k, {})) for k in lt_keys)
 
@@ -170,13 +201,24 @@ def main():
                     print(f"        Removed summary keys: {list(removed.keys())}")
 
     # =========================================================================
-    # STEP 7: Full Output
+    # STEP 9: Full Output
     # =========================================================================
     print("\n" + "=" * 80)
-    print("STEP 7: Full Output JSON")
+    print("STEP 9: Full Output JSON")
     print("=" * 80)
 
     print(json.dumps(result, indent=2, default=str))
+
+    # =========================================================================
+    # STEP 10: Cleanup
+    # =========================================================================
+    print("\n" + "=" * 80)
+    print("STEP 10: Cleanup")
+    print("=" * 80)
+
+    if db_connection:
+        db_connection.close()
+        print("  Database connection closed")
 
     print("\n" + "=" * 80)
     print("DONE")
