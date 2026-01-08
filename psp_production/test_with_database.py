@@ -158,9 +158,14 @@ def main():
     print("STEP 4: Initializing Engine")
     print("=" * 80)
 
+    # Get connection URI for Polars/connectorx (reference data loading)
+    connection_uri = config.get_connectorx_uri()
+    print(f"  Connection URI: {connection_uri}")
+
     engine = PerspectiveEngine(
         db_connection=db_connection,
-        system_version_timestamp=system_version_timestamp
+        system_version_timestamp=system_version_timestamp,
+        connection_uri=connection_uri
     )
 
     print(f"  Engine initialized")

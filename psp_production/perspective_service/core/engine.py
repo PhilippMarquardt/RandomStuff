@@ -30,17 +30,22 @@ from perspective_service.utils.constants import INT_NULL
 class PerspectiveEngine:
     """Main orchestrator for perspective processing."""
 
-    def __init__(self, db_connection=None, system_version_timestamp: Optional[str] = None):
+    def __init__(self,
+                 db_connection=None,
+                 system_version_timestamp: Optional[str] = None,
+                 connection_uri: Optional[str] = None):
         """
         Initialize the PerspectiveEngine.
 
         Args:
-            db_connection: Database connection for loading perspectives and reference data
+            db_connection: Database connection for loading perspectives (pyodbc, for stored procs)
             system_version_timestamp: Optional timestamp for temporal queries
+            connection_uri: Connection URI for reference data loading (connectorx/Polars)
         """
         self.db_connection = db_connection
+        self.connection_uri = connection_uri
         self.system_version_timestamp = system_version_timestamp
-        self.reference_loader = ReferenceLoader() if db_connection else None
+        self.reference_loader = ReferenceLoader() if connection_uri else None
 
         # Step 1 & 2: Load Perspectives and Modifiers
         self.config = ConfigurationManager(db_connection, system_version_timestamp)
@@ -78,7 +83,7 @@ class PerspectiveEngine:
             required_tables,
             position_weights + lookthrough_weights,
             self.reference_loader,
-            self.db_connection
+            self.connection_uri
         )
 
         if positions_lf.collect_schema().names() == []:

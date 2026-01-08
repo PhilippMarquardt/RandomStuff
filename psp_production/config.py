@@ -17,6 +17,13 @@ class DatabaseConfig:
     username: Optional[str] = None
     password: Optional[str] = None
 
+    def get_connectorx_uri(self) -> str:
+        """Get connection URI for connectorx/Polars read_database_uri."""
+        if self.trusted_connection:
+            return f"mssql://{self.server}/{self.database}?trusted_connection=true"
+        else:
+            return f"mssql://{self.username}:{self.password}@{self.server}/{self.database}"
+
 
 def load_config(env_path: str = ".env") -> DatabaseConfig:
     """

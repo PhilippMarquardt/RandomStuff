@@ -1,11 +1,11 @@
 """
 Reference data loader - loads INSTRUMENT, INSTRUMENT_CATEGORIZATION, and PARENT_INSTRUMENT data.
+Uses Polars read_database_uri with connectorx for efficient data loading.
 """
 
 from typing import Dict, List, Optional
 
 import polars as pl
-import pyodbc
 
 
 class ReferenceLoadError(Exception):
@@ -14,10 +14,10 @@ class ReferenceLoadError(Exception):
 
 
 class ReferenceLoader:
-    """Loads reference data from database."""
+    """Loads reference data from database using Polars/connectorx."""
 
     def load(self,
-             conn: pyodbc.Connection,
+             connection_uri: str,
              instrument_ids: List[int],
              parent_instrument_ids: List[int],
              tables_needed: Dict[str, List[str]],
@@ -27,7 +27,7 @@ class ReferenceLoader:
         Load reference data for the specified tables.
 
         Args:
-            conn: Database connection
+            connection_uri: Database connection URI for connectorx (mssql://...)
             instrument_ids: List of instrument IDs to load
             parent_instrument_ids: List of parent instrument IDs (for PARENT_INSTRUMENT)
             tables_needed: Dict of {table_name: [column_names]}
@@ -45,28 +45,26 @@ class ReferenceLoader:
                 continue
 
             if table_name == 'PARENT_INSTRUMENT':
-                # Special handling: query INSTRUMENT table using parent_instrument_ids
-                # and prefix columns with 'parent_'
-                df = self._load_parent_instrument(conn, parent_instrument_ids, columns)
+                df = self._load_parent_instrument(connection_uri, parent_instrument_ids, columns)
                 results[table_name] = df
 
             elif table_name == 'INSTRUMENT':
-                df = self._load_instrument(conn, instrument_ids, columns)
+                df = self._load_instrument(connection_uri, instrument_ids, columns)
                 results[table_name] = df
 
             elif table_name == 'INSTRUMENT_CATEGORIZATION':
                 df = self._load_instrument_categorization(
-                    conn, instrument_ids, columns, system_version_timestamp, ed
+                    connection_uri, instrument_ids, columns, system_version_timestamp, ed
                 )
                 results[table_name] = df
 
         return results
 
     def _load_instrument(self,
-                         conn: pyodbc.Connection,
+                         connection_uri: str,
                          instrument_ids: List[int],
                          columns: List[str]) -> pl.DataFrame:
-        """Load data from INSTRUMENT table (no sysversion)."""
+        """Load data from INSTRUMENT table using Polars/connectorx."""
         if not instrument_ids:
             return pl.DataFrame({"instrument_id": []})
 
@@ -80,39 +78,28 @@ class ReferenceLoader:
         """
 
         try:
-            cursor = conn.cursor()
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            col_names = ['instrument_id'] + [c for c in columns if c != 'instrument_id']
-
-            if not rows:
-                return pl.DataFrame({c: [] for c in col_names})
-
-            data = {col_names[i]: [row[i] for row in rows] for i in range(len(col_names))}
-            return pl.DataFrame(data)
-
-        except pyodbc.Error as e:
+            return pl.read_database_uri(query=query, uri=connection_uri)
+        except Exception as e:
             raise ReferenceLoadError(f"Failed to load INSTRUMENT data: {e}")
 
     def _load_parent_instrument(self,
-                                conn: pyodbc.Connection,
+                                connection_uri: str,
                                 parent_instrument_ids: List[int],
                                 columns: List[str]) -> pl.DataFrame:
         """
-        Load PARENT_INSTRUMENT data.
+        Load PARENT_INSTRUMENT data using Polars/connectorx.
 
-        This queries the INSTRUMENT table using parent_instrument_ids,
+        Queries the INSTRUMENT table using parent_instrument_ids,
         then prefixes all columns with 'parent_'.
         """
+        prefixed = ['parent_instrument_id'] + [f'parent_{c}' for c in columns if c != 'instrument_id']
+
         if not parent_instrument_ids:
-            # Return empty df with prefixed columns
-            prefixed = ['parent_instrument_id'] + [f'parent_{c}' for c in columns if c != 'instrument_id']
             return pl.DataFrame({c: [] for c in prefixed})
 
         # Filter out null sentinel values
         valid_ids = [i for i in parent_instrument_ids if i is not None and i != -2147483648]
         if not valid_ids:
-            prefixed = ['parent_instrument_id'] + [f'parent_{c}' for c in columns if c != 'instrument_id']
             return pl.DataFrame({c: [] for c in prefixed})
 
         columns_str = ", ".join([c for c in columns if c != 'instrument_id'])
@@ -125,21 +112,12 @@ class ReferenceLoader:
         """
 
         try:
-            cursor = conn.cursor()
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            col_names = ['instrument_id'] + [c for c in columns if c != 'instrument_id']
+            df = pl.read_database_uri(query=query, uri=connection_uri)
 
-            if not rows:
-                prefixed = ['parent_instrument_id'] + [f'parent_{c}' for c in columns if c != 'instrument_id']
+            if df.is_empty():
                 return pl.DataFrame({c: [] for c in prefixed})
 
-            data = {col_names[i]: [row[i] for row in rows] for i in range(len(col_names))}
-            df = pl.DataFrame(data)
-
             # Rename columns with parent_ prefix
-            # instrument_id -> parent_instrument_id (for joining)
-            # other columns -> parent_{column}
             rename_map = {'instrument_id': 'parent_instrument_id'}
             for c in columns:
                 if c != 'instrument_id':
@@ -147,16 +125,16 @@ class ReferenceLoader:
 
             return df.rename(rename_map)
 
-        except pyodbc.Error as e:
+        except Exception as e:
             raise ReferenceLoadError(f"Failed to load PARENT_INSTRUMENT data: {e}")
 
     def _load_instrument_categorization(self,
-                                        conn: pyodbc.Connection,
+                                        connection_uri: str,
                                         instrument_ids: List[int],
                                         columns: List[str],
                                         system_version_timestamp: Optional[str],
                                         ed: Optional[str]) -> pl.DataFrame:
-        """Load data from INSTRUMENT_CATEGORIZATION table with sysversion."""
+        """Load data from INSTRUMENT_CATEGORIZATION table using Polars/connectorx."""
         if not instrument_ids:
             return pl.DataFrame({"instrument_id": []})
 
@@ -183,16 +161,6 @@ class ReferenceLoader:
                 query = query.rstrip() + f" AND ED = '{ed}'"
 
         try:
-            cursor = conn.cursor()
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            col_names = ['instrument_id'] + [c for c in columns if c != 'instrument_id']
-
-            if not rows:
-                return pl.DataFrame({c: [] for c in col_names})
-
-            data = {col_names[i]: [row[i] for row in rows] for i in range(len(col_names))}
-            return pl.DataFrame(data)
-
-        except pyodbc.Error as e:
+            return pl.read_database_uri(query=query, uri=connection_uri)
+        except Exception as e:
             raise ReferenceLoadError(f"Failed to load INSTRUMENT_CATEGORIZATION data: {e}")

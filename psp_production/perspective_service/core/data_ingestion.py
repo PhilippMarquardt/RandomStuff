@@ -19,7 +19,7 @@ class DataIngestion:
                          required_tables: Dict[str, List[str]],
                          weight_labels: List[str],
                          reference_loader: Optional[ReferenceLoader] = None,
-                         db_connection=None) -> Tuple[pl.LazyFrame, pl.LazyFrame]:
+                         connection_uri: Optional[str] = None) -> Tuple[pl.LazyFrame, pl.LazyFrame]:
         """
         Build position and lookthrough dataframes from input JSON.
 
@@ -28,7 +28,7 @@ class DataIngestion:
             required_tables: Tables required for joins {table_name: [columns]}
             weight_labels: List of weight column names
             reference_loader: ReferenceLoader instance for DB data
-            db_connection: Database connection for reference data
+            connection_uri: Connection URI for reference data (connectorx/Polars)
 
         Returns:
             Tuple of (positions_df, lookthroughs_df) as LazyFrames
@@ -54,12 +54,12 @@ class DataIngestion:
             lookthroughs_lf = DataIngestion._fill_null_values(lookthroughs_lf, weight_labels)
 
         # Join reference data if needed
-        if required_tables and reference_loader and db_connection:
+        if required_tables and reference_loader and connection_uri:
             effective_date = input_json.get('ed', '2024-01-01')
             system_version_timestamp = input_json.get('system_version_timestamp')
             positions_lf, lookthroughs_lf = DataIngestion._join_reference_data(
                 positions_lf, lookthroughs_lf, required_tables,
-                reference_loader, db_connection,
+                reference_loader, connection_uri,
                 system_version_timestamp, effective_date
             )
 
@@ -174,10 +174,10 @@ class DataIngestion:
                              lookthroughs_lf: pl.LazyFrame,
                              required_tables: Dict[str, List[str]],
                              reference_loader: ReferenceLoader,
-                             db_connection,
+                             connection_uri: str,
                              system_version_timestamp: Optional[str],
                              effective_date: str) -> Tuple[pl.LazyFrame, pl.LazyFrame]:
-        """Join reference data from database."""
+        """Join reference data from database using Polars/connectorx."""
         # Get unique instrument IDs
         pos_ids = positions_lf.select('instrument_id')
         lt_ids = (lookthroughs_lf.select('instrument_id')
@@ -200,9 +200,9 @@ class DataIngestion:
         if not tables_to_load:
             return positions_lf, lookthroughs_lf
 
-        # Load reference data
+        # Load reference data using Polars/connectorx
         ref_data = reference_loader.load(
-            db_connection,
+            connection_uri,
             unique_ids,
             parent_ids,
             tables_to_load,
