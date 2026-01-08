@@ -391,10 +391,11 @@ class OutputFormatter:
                            position_weights: List[str],
                            results: Dict):
         """
-        Add scale_factors to output - sum of removed weights per weight label PER CONTAINER.
+        Add scale_factors to output - sum of KEPT weights per weight label PER CONTAINER.
 
         This matches the original core_perspective_service behavior where
-        each container has its own scale_factors showing removed weight.
+        scale_factors = sum of weights of positions that were NOT removed.
+        Only added for containers that have at least one removed position.
         """
         if positions_df.is_empty():
             return
@@ -413,14 +414,32 @@ class OutputFormatter:
                 if col_name not in positions_df.columns:
                     continue
 
-                # Filter to removed positions (null factor)
-                removed = positions_df.filter(pl.col(col_name).is_null())
-                if removed.is_empty():
+                # Find containers that have at least one removed position
+                containers_with_removals = (
+                    positions_df
+                    .filter(pl.col(col_name).is_null())
+                    .select("container")
+                    .unique()
+                    .to_series()
+                    .to_list()
+                )
+
+                if not containers_with_removals:
                     continue
 
-                # Group by container and multiply weights (original uses multiplication, not sum)
-                agg_exprs = [pl.col(w).product().alias(w) for w in valid_weights]
-                aggregated = removed.group_by("container").agg(agg_exprs)
+                # Filter to KEPT positions (factor is NOT null) in containers with removals
+                kept = positions_df.filter(
+                    (pl.col(col_name).is_not_null()) &
+                    (pl.col("container").is_in(containers_with_removals))
+                )
+
+                if kept.is_empty():
+                    # All positions were removed in these containers
+                    continue
+
+                # Group by container and SUM weights of KEPT positions
+                agg_exprs = [pl.col(w).sum().alias(w) for w in valid_weights]
+                aggregated = kept.group_by("container").agg(agg_exprs)
 
                 # Add scale_factors per container
                 for row in aggregated.iter_rows(named=True):
