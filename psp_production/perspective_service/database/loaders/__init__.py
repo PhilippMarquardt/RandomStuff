@@ -1,6 +1,5 @@
-"""Database loaders for perspectives and reference data."""
+"""Database loaders."""
 
-from perspective_service.database.loaders.perspective_loader import load_perspectives
-from perspective_service.database.loaders.reference_loader import ReferenceLoader
+from perspective_service.database.loaders.database_loader import DatabaseLoader, DatabaseLoadError
 
-__all__ = ['load_perspectives', 'ReferenceLoader']
+__all__ = ['DatabaseLoader', 'DatabaseLoadError']

@@ -22,7 +22,7 @@ from perspective_service.core.data_ingestion import DataIngestion
 from perspective_service.core.perspective_processor import PerspectiveProcessor
 from perspective_service.core.output_formatter import OutputFormatter
 from perspective_service.core.rule_evaluator import RuleEvaluator
-from perspective_service.database.loaders.reference_loader import ReferenceLoader
+from perspective_service.database.loaders.database_loader import DatabaseLoader
 from perspective_service.models.rule import Rule
 from perspective_service.utils.constants import INT_NULL
 
@@ -31,24 +31,25 @@ class PerspectiveEngine:
     """Main orchestrator for perspective processing."""
 
     def __init__(self,
-                 db_connection=None,
-                 system_version_timestamp: Optional[str] = None,
-                 connection_uri: Optional[str] = None):
+                 connection_string: Optional[str] = None,
+                 system_version_timestamp: Optional[str] = None):
         """
         Initialize the PerspectiveEngine.
 
         Args:
-            db_connection: Database connection for loading perspectives (pyodbc, for stored procs)
+            connection_string: ODBC connection string for database access
             system_version_timestamp: Optional timestamp for temporal queries
-            connection_uri: Connection URI for reference data loading (connectorx/Polars)
         """
-        self.db_connection = db_connection
-        self.connection_uri = connection_uri
         self.system_version_timestamp = system_version_timestamp
-        self.reference_loader = ReferenceLoader() if connection_uri else None
+
+        # Create DatabaseLoader if connection string provided
+        if connection_string:
+            self.db_loader = DatabaseLoader(connection_string)
+        else:
+            self.db_loader = None
 
         # Step 1 & 2: Load Perspectives and Modifiers
-        self.config = ConfigurationManager(db_connection, system_version_timestamp)
+        self.config = ConfigurationManager(self.db_loader, system_version_timestamp)
 
     def process(self,
                 input_json: Dict,
@@ -82,8 +83,7 @@ class PerspectiveEngine:
             input_json,
             required_tables,
             position_weights + lookthrough_weights,
-            self.reference_loader,
-            self.connection_uri
+            self.db_loader
         )
 
         if positions_lf.collect_schema().names() == []:

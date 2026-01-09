@@ -8,7 +8,7 @@ import polars as pl
 import polars.selectors as cs
 
 from perspective_service.utils.constants import INT_NULL, FLOAT_NULL
-from perspective_service.database.loaders.reference_loader import ReferenceLoader
+from perspective_service.database.loaders.database_loader import DatabaseLoader
 
 
 class DataIngestion:
@@ -18,8 +18,7 @@ class DataIngestion:
     def build_dataframes(input_json: Dict,
                          required_tables: Dict[str, List[str]],
                          weight_labels: List[str],
-                         reference_loader: Optional[ReferenceLoader] = None,
-                         connection_uri: Optional[str] = None) -> Tuple[pl.LazyFrame, pl.LazyFrame]:
+                         db_loader: Optional[DatabaseLoader] = None) -> Tuple[pl.LazyFrame, pl.LazyFrame]:
         """
         Build position and lookthrough dataframes from input JSON.
 
@@ -27,8 +26,7 @@ class DataIngestion:
             input_json: Raw input data
             required_tables: Tables required for joins {table_name: [columns]}
             weight_labels: List of weight column names
-            reference_loader: ReferenceLoader instance for DB data
-            connection_uri: Connection URI for reference data (connectorx/Polars)
+            db_loader: DatabaseLoader instance for loading reference data
 
         Returns:
             Tuple of (positions_df, lookthroughs_df) as LazyFrames
@@ -54,13 +52,12 @@ class DataIngestion:
             lookthroughs_lf = DataIngestion._fill_null_values(lookthroughs_lf, weight_labels)
 
         # Join reference data if needed
-        if required_tables and reference_loader and connection_uri:
+        if required_tables and db_loader:
             effective_date = input_json.get('ed', '2024-01-01')
             system_version_timestamp = input_json.get('system_version_timestamp')
             positions_lf, lookthroughs_lf = DataIngestion._join_reference_data(
                 positions_lf, lookthroughs_lf, required_tables,
-                reference_loader, connection_uri,
-                system_version_timestamp, effective_date
+                db_loader, system_version_timestamp, effective_date
             )
 
         return positions_lf, lookthroughs_lf
@@ -173,11 +170,10 @@ class DataIngestion:
     def _join_reference_data(positions_lf: pl.LazyFrame,
                              lookthroughs_lf: pl.LazyFrame,
                              required_tables: Dict[str, List[str]],
-                             reference_loader: ReferenceLoader,
-                             connection_uri: str,
+                             db_loader: DatabaseLoader,
                              system_version_timestamp: Optional[str],
                              effective_date: str) -> Tuple[pl.LazyFrame, pl.LazyFrame]:
-        """Join reference data from database using Polars/connectorx."""
+        """Join reference data from database."""
         # Get unique instrument IDs
         pos_ids = positions_lf.select('instrument_id')
         lt_ids = (lookthroughs_lf.select('instrument_id')
@@ -193,6 +189,12 @@ class DataIngestion:
         else:
             parent_ids = []
 
+        # Get unique asset_allocation_ids for ASSET_ALLOCATION_ANALYTICS_CATEGORY_V lookup
+        if 'asset_allocation_id' in pos_columns:
+            asset_allocation_ids = positions_lf.select('asset_allocation_id').unique().collect().to_series().to_list()
+        else:
+            asset_allocation_ids = []
+
         # Only load tables that are actually required (no hardcoded defaults)
         tables_to_load = dict(required_tables)
 
@@ -200,14 +202,14 @@ class DataIngestion:
         if not tables_to_load:
             return positions_lf, lookthroughs_lf
 
-        # Load reference data using Polars/connectorx
-        ref_data = reference_loader.load(
-            connection_uri,
-            unique_ids,
-            parent_ids,
-            tables_to_load,
-            system_version_timestamp,
-            effective_date
+        # Load reference data from database
+        ref_data = db_loader.load_reference_data(
+            instrument_ids=unique_ids,
+            parent_instrument_ids=parent_ids,
+            asset_allocation_ids=asset_allocation_ids,
+            tables_needed=tables_to_load,
+            system_version_timestamp=system_version_timestamp,
+            ed=effective_date
         )
 
         # Join each table
@@ -233,8 +235,24 @@ class DataIngestion:
                             right_on='parent_instrument_id',
                             how='left'
                         )
+            elif table_name == 'ASSET_ALLOCATION_ANALYTICS_CATEGORY_V':
+                # Special join: asset_allocation_id ↔ analytics_category_id
+                if 'asset_allocation_id' in positions_lf.collect_schema().names():
+                    positions_lf = positions_lf.join(
+                        ref_lf,
+                        left_on='asset_allocation_id',
+                        right_on='analytics_category_id',
+                        how='left'
+                    )
+                    if lookthroughs_lf.collect_schema().names() and 'asset_allocation_id' in lookthroughs_lf.collect_schema().names():
+                        lookthroughs_lf = lookthroughs_lf.join(
+                            ref_lf,
+                            left_on='asset_allocation_id',
+                            right_on='analytics_category_id',
+                            how='left'
+                        )
             else:
-                # Join on instrument_id
+                # Join on instrument_id (default for INSTRUMENT, INSTRUMENT_CATEGORIZATION, etc.)
                 positions_lf = positions_lf.join(ref_lf, on='instrument_id', how='left')
                 if lookthroughs_lf.collect_schema().names():
                     lookthroughs_lf = lookthroughs_lf.join(ref_lf, on='instrument_id', how='left')

@@ -24,6 +24,24 @@ class DatabaseConfig:
         else:
             return f"mssql://{self.username}:{self.password}@{self.server}/{self.database}"
 
+    def get_odbc_connection_string(self) -> str:
+        """Get ODBC connection string for arrow-odbc."""
+        if self.trusted_connection:
+            return (
+                f"Driver={{{self.driver}}};"
+                f"Server={self.server};"
+                f"Database={self.database};"
+                f"Trusted_Connection=yes;"
+            )
+        else:
+            return (
+                f"Driver={{{self.driver}}};"
+                f"Server={self.server};"
+                f"Database={self.database};"
+                f"Uid={self.username};"
+                f"Pwd={self.password};"
+            )
+
 
 def load_config(env_path: str = ".env") -> DatabaseConfig:
     """

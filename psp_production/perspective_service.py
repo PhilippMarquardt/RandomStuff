@@ -5,7 +5,6 @@ Perspective Service - Main API entry point.
 from typing import Dict, List, Optional
 
 from config import load_config, DatabaseConfig
-from perspective_service.database.connection import get_connection
 from perspective_service.core.engine import PerspectiveEngine
 
 
@@ -29,7 +28,6 @@ class PerspectiveService:
             config_path: Path to .env file (used if config not provided)
         """
         self.config = config or load_config(config_path)
-        self._engine: Optional[PerspectiveEngine] = None
 
     def process(self,
                 input_json: Dict,
@@ -51,43 +49,19 @@ class PerspectiveService:
 
         Returns:
             Formatted output dictionary with perspective_configurations
-
-        Example:
-            input_json = {
-                "container_1": {
-                    "position_type": "benchmark",
-                    "positions": {
-                        "pos_1": {"instrument_id": 123, "weight": 0.5},
-                        "pos_2": {"instrument_id": 456, "weight": 0.3}
-                    }
-                }
-            }
-
-            perspective_configs = {
-                "default": {
-                    "1": ["exclude_other_net_assets"],
-                    "2": []
-                }
-            }
-
-            result = service.process(
-                input_json,
-                perspective_configs,
-                position_weights=["weight"]
-            )
         """
         if lookthrough_weights is None:
             lookthrough_weights = position_weights
 
-        with get_connection(self.config) as conn:
-            engine = PerspectiveEngine(conn, system_version_timestamp)
-            return engine.process(
-                input_json,
-                perspective_configs,
-                position_weights,
-                lookthrough_weights,
-                verbose
-            )
+        connection_string = self.config.get_odbc_connection_string()
+        engine = PerspectiveEngine(connection_string, system_version_timestamp)
+        return engine.process(
+            input_json,
+            perspective_configs,
+            position_weights,
+            lookthrough_weights,
+            verbose
+        )
 
     def process_without_db(self,
                            input_json: Dict,

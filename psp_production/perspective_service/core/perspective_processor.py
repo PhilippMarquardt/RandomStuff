@@ -161,7 +161,7 @@ class PerspectiveProcessor:
                 rule_expr = current_expr
             else:
                 previous_rule = rules[idx - 1]
-                if previous_rule.condition_for_next_rule == "Or":
+                if previous_rule.condition_for_next_rule == "or":
                     rule_expr = rule_expr | current_expr
                 else:
                     rule_expr = rule_expr & current_expr
